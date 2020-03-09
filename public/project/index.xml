@@ -1,0 +1,1350 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Projects | Yingfei (Ted) Jiang</title>
+    <link>/project/</link>
+      <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+    <description>Projects</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
+    <image>
+      <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
+      <title>Projects</title>
+      <link>/project/</link>
+    </image>
+    
+    <item>
+      <title>Electricity Power Plants in the United States</title>
+      <link>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</guid>
+      <description>
+&lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;This project will explore the electricity generation plants in the United States and their air pollutants and greenhouse gas (GHG) emissions. There are three parts in this porject.&lt;br /&gt;
+Part one explores the average electricity GHG emission factor on a state level and how they are affected by the electricty mix in different state (renewable-to-total and natural-gas-to-fossil-fuel). In carbon accounting, this is called &lt;strong&gt;scope II emission&lt;/strong&gt;.&lt;br /&gt;
+Part two explores the generation plants in ten most populated states, and their total &lt;span class=&#34;math inline&#34;&gt;\(NO_x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(SO_2\)&lt;/span&gt;, and GHG emission in 2018.&lt;br /&gt;
+Part three explores the electricity generation and emissions for California counties in 2018.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;diablo_canyon.jpg&#34; alt=&#34;Figure 1. The Diablo Canyon Nuclear Power Plant. Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. The Diablo Canyon Nuclear Power Plant.&lt;/strong&gt; Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Read in data sets.
+
+raw_df &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;PLNT18&amp;quot;)
+raw_df_st &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;ST18&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_df &amp;lt;- raw_df %&amp;gt;% 
+  clean_names() %&amp;gt;% 
+  select(pstatabb, cntyname, fipsst, fipscnty, plprmfl, plfuelct, coalflag, namepcap, plnoxrta, plso2rta, plco2rta, plch4rta, pln2orta, plc2erta, plso2an, plnoxan, plco2eqa, plngenan) #Selecting the cateogries of interest&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_st_df &amp;lt;- raw_df_st %&amp;gt;% 
+  clean_names() %&amp;gt;% 
+  select(pstatabb, stnoxrta, stso2rta, namepcap, stgenatn, stc2erta, sttrpr, stgspr, sttnpr, stngenan) %&amp;gt;% 
+  mutate(gas_ratio = stgspr/sttnpr) #Calculating the percentage of gas-generated electricity among all fossil fuel-generated electricity.&lt;/code&gt;&lt;/pre&gt;
+&lt;div id=&#34;part-one.-the-average-electricity-ghg-emission-factor-on-a-state-level.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;Part One.&lt;/strong&gt; The average electricity GHG emission factor on a state level.&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;state_bubble &amp;lt;- ggplot(clean_st_df, aes(x = sttrpr*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = &amp;quot;#5BBCD6&amp;quot;)+
+  scale_size(range = c(.1, 10), name=&amp;quot;Total Generation (MWh)&amp;quot;)+
+  xlab(&amp;quot;Renewable Electricity Percentage&amp;quot;)+
+  ylab(&amp;quot;Average Electricity GHG Emission Factor (lb/MWh)&amp;quot;)+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+  
+state_bubble&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 2. The Relationship between Average Electricity GHG Emission Factor and Renewable Generation Percentage on a State Level.&lt;/strong&gt; Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;clean_st_fossil &amp;lt;- clean_st_df %&amp;gt;% 
+  filter(sttnpr &amp;gt; 0.80)
+
+state_fs_bubble &amp;lt;- ggplot(clean_st_fossil, aes(x = gas_ratio*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = &amp;quot;#F98400&amp;quot;)+
+  scale_size(range = c(.1, 10), name=&amp;quot;Total Generation (MWh)&amp;quot;)+
+  xlab(&amp;quot;Pencentage of Natural-gas-electricity among Fossil-fuel-electricity&amp;quot;)+
+  ylab(&amp;quot;Average Electricity GHG Emission Factor (lb/MWh)&amp;quot;)+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+state_fs_bubble&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-5-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 3. The Relationship between Average Electricity GHG Emission Factor and the Pencentage of Natural-gas-electricity among Fossil-fuel-electricity for States with More than 80% Non-renewable Electricity.&lt;/strong&gt; Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;part-two.-the-generation-plants-in-ten-most-populated-states.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;Part Two.&lt;/strong&gt; The generation plants in ten most populated states.&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gas_df &amp;lt;- clean_df %&amp;gt;% 
+  filter (plfuelct %in% c(&amp;quot;GAS&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;COAL&amp;quot;))%&amp;gt;% # Selecting all fossil fuels
+  group_by(pstatabb) %&amp;gt;% 
+  select(-coalflag) %&amp;gt;% 
+  drop_na() %&amp;gt;% 
+  filter(pstatabb %in% c(&amp;quot;CA&amp;quot;, &amp;quot;TX&amp;quot;, &amp;quot;FL&amp;quot;, &amp;quot;NY&amp;quot;, &amp;quot;PA&amp;quot;, &amp;quot;IL&amp;quot;, &amp;quot;OH&amp;quot;, &amp;quot;GA&amp;quot;, &amp;quot;NC&amp;quot;, &amp;quot;MI&amp;quot;))# Selecting the top ten populated states&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gasvis2 &amp;lt;- ggplot(gas_df, aes(x = pstatabb, y = plso2an))+
+  geom_jitter(width = 0.20, aes(color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&amp;quot;Darjeeling1&amp;quot;))+
+  xlab(&amp;quot;State&amp;quot;)+
+  ylab(&amp;quot;2018 Annual Sulfur Dioxide Emssion (tons)&amp;quot;)+
+  labs(color = &amp;quot;Plant Type&amp;quot;)
+
+gasvis2&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 4. Total Annual &lt;span class=&#34;math inline&#34;&gt;\(SO_2\)&lt;/span&gt; Emission on a Power Plant Level for Ten Most Populated States.&lt;/strong&gt; Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gasvis4 &amp;lt;- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plnoxan,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&amp;quot;Darjeeling1&amp;quot;))+
+  xlab(&amp;quot;State&amp;quot;)+
+  ylab(&amp;quot;2018 Annual NOx Emssion (tons)&amp;quot;)+
+  labs(color = &amp;quot;Plant Type&amp;quot;)
+
+gasvis4&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 5. Total Annual &lt;span class=&#34;math inline&#34;&gt;\(NO_x\)&lt;/span&gt; Emission on a Power Plant Level for Ten Most Populated States.&lt;/strong&gt; Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;gasvis5 &amp;lt;- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plco2eqa,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&amp;quot;Darjeeling1&amp;quot;))+
+  xlab(&amp;quot;State&amp;quot;)+
+  ylab(&amp;quot;2018 Annual GHG Emssion (tons carbon dioxide equivalent)&amp;quot;)+
+  labs(color = &amp;quot;Plant Type&amp;quot;)
+
+gasvis5&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 6. Total Annual GHG Emission on a Power Plant Level for Ten Most Populated States.&lt;/strong&gt; Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;part-three.-electricity-generation-and-emissions-for-california-counties&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;Part Three.&lt;/strong&gt; Electricity generation and emissions for California counties&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ca_df &amp;lt;- clean_df %&amp;gt;% 
+  filter(pstatabb == &amp;quot;CA&amp;quot;) %&amp;gt;% 
+  select(-coalflag) %&amp;gt;% 
+  mutate(cntyname = str_to_title(cntyname)) %&amp;gt;% 
+  group_by(cntyname) %&amp;gt;% 
+  mutate(plso2an = replace_na(plso2an, 0)) %&amp;gt;% 
+  mutate(plnoxan = replace_na(plnoxan, 0)) %&amp;gt;% 
+  filter (is.na (plngenan) == FALSE) %&amp;gt;% 
+  summarise(nox_total = sum(plnoxan),
+            so2_total = sum(plso2an),
+            gen_total = sum(plngenan)) %&amp;gt;% 
+  mutate(nox_rt = scales::number(nox_total*2000/gen_total, accuracy = 0.001),
+         so2_rt = scales::number(so2_total*2000/gen_total, accuracy = 0.001)) %&amp;gt;% 
+  mutate(nox_rt = cell_spec(nox_rt, &amp;quot;html&amp;quot;, bold = T, color = ifelse(nox_rt &amp;gt; 0.377, &amp;quot;#F2AD00&amp;quot;, &amp;quot;#00A08A&amp;quot;), background = &amp;quot;#d7eff5&amp;quot;),
+         so2_rt = cell_spec(so2_rt, &amp;quot;html&amp;quot;, bold = T, color = ifelse(so2_rt &amp;gt; 0.036, &amp;quot;#F2AD00&amp;quot;, &amp;quot;#00A08A&amp;quot;), background = &amp;quot;#d7eff5&amp;quot;)) 
+
+
+title &amp;lt;- c(&amp;quot;County&amp;quot;, &amp;quot;Total NOx Emission (tons)&amp;quot;, &amp;quot;Total SO2 Emission (tons)&amp;quot;, &amp;quot;Total Net Generation (MWh)&amp;quot;, &amp;quot;NOx Emission Rate (lb/MWh)&amp;quot;, &amp;quot;SO2 Emission Rate(lb/MWh)&amp;quot;)
+
+colnames(ca_df) &amp;lt;- title&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;my_tbl &amp;lt;- ca_df %&amp;gt;% 
+  kable(escape=F, align = &amp;quot;r&amp;quot;) %&amp;gt;% 
+  kable_styling(bootstrap_options = c(&amp;quot;striped&amp;quot;, &amp;quot;hover&amp;quot;, &amp;quot;condensed&amp;quot;)) %&amp;gt;% 
+  column_spec(1, bold = T, color = &amp;quot;white&amp;quot;, background = &amp;quot;#046C9A&amp;quot;) %&amp;gt;% 
+  row_spec(0, bold = T, color = &amp;quot;white&amp;quot;, background = &amp;quot;#F98400&amp;quot;)%&amp;gt;%
+  scroll_box(width = &amp;quot;100%&amp;quot;, height = &amp;quot;300px&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;strong&gt;Table 1. 2018 Electricity Generation and Emission for California Counties.&lt;/strong&gt; Total &lt;span class=&#34;math inline&#34;&gt;\(NO_x\)&lt;/span&gt; And &lt;span class=&#34;math inline&#34;&gt;\(SO_2\)&lt;/span&gt; emission, total net generation amount, and corresponding emission factor are shown in the table. If the emission factor for a pollutant type is higher than California average, it is marked as yellow. Otherwise, it is marked as green. (Source: eGrid, 2018)
+&lt;div style=&#34;border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; &#34;&gt;
+&lt;table class=&#34;table table-striped table-hover table-condensed&#34; style=&#34;margin-left: auto; margin-right: auto;&#34;&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+County
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+Total NOx Emission (tons)
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+Total SO2 Emission (tons)
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+Total Net Generation (MWh)
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+NOx Emission Rate (lb/MWh)
+&lt;/th&gt;
+&lt;th style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;&#34;&gt;
+SO2 Emission Rate(lb/MWh)
+&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Alameda
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+723.060
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+23.439
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2033905.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.711&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.023&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Amador
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+738753.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Butte
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8.811
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.135
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2353681.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.007&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.002&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Calaveras
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+493930.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Colusa
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+163.039
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+34.964
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3152517.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.103&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.022&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Contra Costa
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3419.368
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+58.228
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+14286071.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.479&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.008&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+El Dorado
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+167.884
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.200
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1360204.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.247&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Fresno
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+256.030
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+39.102
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6871723.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.075&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.011&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Glenn
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+7791.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Humboldt
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4732.149
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+49.976
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+536932.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;17.627&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.186&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Imperial
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+54.158
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1413.840
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8388389.07
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.013&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.337&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Inyo
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+549.855
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1373519.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.801&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Kern
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6663.567
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+122.718
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+32066102.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.416&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.008&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Kings
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+268.177
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.526
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1197595.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.448&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.001&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Lake
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1.306
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.270
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+943400.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.003&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.001&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Lassen
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+423.338
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+33.600
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+274015.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;3.090&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.245&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Los Angeles
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+8013.808
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+497.241
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+22910992.61
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.700&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.043&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Madera
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+283.825
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.490
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+890244.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.638&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.001&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Marin
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5.402
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29920.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.361&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Mariposa
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+269655.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Mendocino
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+19041.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Merced
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+28.840
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.158
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+251373.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.229&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.001&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Mono
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+400981.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Monterey
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+257.263
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+16.413
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4975840.84
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.103&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.007&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Napa
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1566.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Nevada
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+273679.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Orange
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1995.386
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+81.375
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1442024.21
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;2.767&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.113&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Placer
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+181.772
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+46.269
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1976944.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.184&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.047&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Plumas
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+120.342
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+20.313
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1342157.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.179&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.030&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Riverside
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+400.508
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+74.247
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9105865.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.088&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.016&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Sacramento
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+147.373
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+27.541
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6315421.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.047&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.009&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Benito
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+220169.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Bernardino
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+983.456
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+17.332
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10593186.84
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.186&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.003&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Diego
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2076.426
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+45.743
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4825121.99
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.861&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.019&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Francisco
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+221.592
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.928
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+103400.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;4.286&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.018&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Joaquin
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+444.818
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+18.047
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2870108.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.310&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.013&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Luis Obispo
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.446
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.098
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+20619666.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+San Mateo
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+114.136
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+15.055
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+128516.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;1.776&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.234&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Santa Barbara
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+13.808
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.696
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+193125.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.143&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.049&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Santa Clara
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+435.387
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+10.611
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3693010.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.236&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.006&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Santa Cruz
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+29.756
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6.015
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+60099.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.990&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.200&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Shasta
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+580.339
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+106.119
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6563004.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.177&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.032&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Sierra
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+89.447
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+9.504
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+71384.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;2.506&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.266&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Siskiyou
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+57.415
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3.879
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+324458.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.354&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.024&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Solano
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+402.206
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+16.717
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+3182720.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.253&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.011&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Sonoma
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+151.514
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+6.672
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+5636210.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.054&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.002&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Stanislaus
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+402.367
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+27.071
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2231070.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.361&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.024&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Sutter
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+149.475
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.384
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+958759.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.312&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.005&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Tehama
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+194.016
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.229
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+46682.01
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;8.312&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.010&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Trinity
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+299486.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Tulare
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+115.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2.043
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+799120.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.288&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.005&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Tuolumne
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+230.360
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+34.424
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+2719000.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.169&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.025&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Ventura
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1725.350
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+11.613
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1223917.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;2.819&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.019&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Yolo
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+83.936
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+44.944
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+255407.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.657&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.352&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td style=&#34;text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;&#34;&gt;
+Yuba
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+0.000
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+4.849
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+1311009.00
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.000&lt;/span&gt;
+&lt;/td&gt;
+&lt;td style=&#34;text-align:right;&#34;&gt;
+&lt;span style=&#34; font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;&#34;&gt;0.007&lt;/span&gt;
+&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reference&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Reference:&lt;/h5&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;US EPA. (2020). Emissions &amp;amp; Generation Resource Integrated Database (eGRID). Available at: &lt;a href=&#34;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Cardwell, D. (2016). California’s Last Nuclear Power Plant Could Close. The New York Times. Available at: &lt;a href=&#34;https://www.nytimes.com/2016/06/22/business/californias-diablo-canyon-nuclear-power-plant.html&#34; class=&#34;uri&#34;&gt;https://www.nytimes.com/2016/06/22/business/californias-diablo-canyon-nuclear-power-plant.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Principal Component Analysis on Meat Products</title>
+      <link>/project/principal-component-analysis-on-meat-products/esm244_hw1_task2_tedjiang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/principal-component-analysis-on-meat-products/esm244_hw1_task2_tedjiang/</guid>
+      <description>
+
+
+&lt;p&gt;This project will explore the potential correlations of mineral nutrients contents in meat products, using the food nutrient information dataset from United States Department of Agriculture (USDA) (USDA, 2019). This includes beef products, finfish and shellfish products, Pork Products, Lamb, Veal, and Game Products and poultry products. The dataset includes the description and nutrients contents for 8,618 food products, categorized into different food groups. Other than the absolute value of nutrients, the dataset also includes the nutrients’ percentage of the United States Recommended Daily Allowance (USRDA), which will not be included in this analysis.&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw_df_2 &amp;lt;- read_csv(&amp;quot;usda_nutrients.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw_df_meat &amp;lt;- raw_df_2 %&amp;gt;% 
+  filter (FoodGroup %in% c(&amp;quot;Finfish and Shellfish Products&amp;quot;, &amp;quot;Poultry Products&amp;quot;,&amp;quot;Pork Products&amp;quot;, &amp;quot;Lamb, Veal, and Game Products&amp;quot;, &amp;quot;Beef Products&amp;quot;)) %&amp;gt;% # Selecting all meat products in the dataset
+  clean_names() %&amp;gt;% 
+  select(food_group,calcium_mg, copper_mcg, iron_mg, magnesium_mg, manganese_mg, phosphorus_mg, selenium_mcg, zinc_mg) # Selecting all mineral nutrients in the dataset&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;# Selecting the numerical part of the dataset for PCA analysis
+pca_df &amp;lt;- raw_df_meat[c(2:9)]
+
+meat_pca &amp;lt;- prcomp(pca_df, scale = TRUE)
+
+# Un-comment this if you need see the result of PCA
+# summary(meat_pca)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Finishing biplot
+my_biplot &amp;lt;- autoplot(meat_pca, 
+                      data = raw_df_meat,
+                      colour = &amp;#39;food_group&amp;#39;,
+                      alpha = 0.5,
+                      size = 0.5,
+                      loadings.colour = &amp;quot;#00A08A&amp;quot;,
+                      loadings.label = TRUE,
+                      loadings.label.size = 3,
+                      loadings.label.colour = &amp;quot;black&amp;quot;,
+                      loadings.label.repel = TRUE) +
+  theme_minimal()+
+  scale_color_manual(values=wes_palette(n=5, name=&amp;quot;FantasticFox1&amp;quot;))+
+  labs(color = &amp;quot;Food Group&amp;quot;)+
+  xlab(&amp;quot;Principal Component 1 (25.62%)&amp;quot;)+
+  ylab(&amp;quot;Principal Component 2 (17.27%)&amp;quot;)
+  
+
+my_biplot&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/principal-component-analysis-on-meat-products/ESM244_HW1_Task2_TedJiang_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 1. Principal Component Analysis Biplot Showing Mineral Nutrients Contents Associations in Meat Products.&lt;/strong&gt; Principal component 1 and principal component 2 together can expalin 42.89% of the data variance. Color of the points indicates the type of the meat (Source: USDA, 2019).&lt;/p&gt;
+&lt;div id=&#34;take-aways-from-the-biplot&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Take-aways from the biplot:&lt;/h5&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;In meat products, mineral nutrients usually have a positive correlation with each other. This means that when a product is rich in one mineral nutrient, it is usually rich in other nutirents too. However, this correlation can be stronger for some nutrients, while neglegible for others.&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;Four pairs of mineral nutrients–calcium/magnesium, phosphorus/selenium, iron/copper, and zinc/manganese–have strong correlations within each pair. For example, if a product is rich in calcium, it is predicted that it is also rich in magnesium.&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;On top of the four pairs, the mineral nutrients can also be separated into two groups–one with calcium, magnesium, phosphorus, and selenium, while the other one with iron, copper, zinc, and manganese. The nutrients within each group have relatively strong correlation with each other.&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;The correlation between calcium and zinc/manganese is very weak, meaning that the richness of calcium is predicted to not affect the richness of zinc or manganese.&lt;/li&gt;
+&lt;li&gt;Products from the same food group are usually clustered together, meaning that meat of the same type usually have similar nutrients content with each other.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reference&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Reference:&lt;/h5&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;USDA. (2019). Food nutrient information for raw fruits and veggies from USDA (National Nutrient Database. Available at: &lt;a href=&#34;https://fdc.nal.usda.gov/index.html&#34; class=&#34;uri&#34;&gt;https://fdc.nal.usda.gov/index.html&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

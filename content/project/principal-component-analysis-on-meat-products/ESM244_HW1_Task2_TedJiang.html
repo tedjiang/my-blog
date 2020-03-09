@@ -1,0 +1,62 @@
+---
+title: "Principal Component Analysis on Meat Products"
+author: "Yingfei Jiang"
+date: "2/4/2020"
+output: html_document
+---
+
+
+
+<p>This project will explore the potential correlations of mineral nutrients contents in meat products, using the food nutrient information dataset from United States Department of Agriculture (USDA) (USDA, 2019). This includes beef products, finfish and shellfish products, Pork Products, Lamb, Veal, and Game Products and poultry products. The dataset includes the description and nutrients contents for 8,618 food products, categorized into different food groups. Other than the absolute value of nutrients, the dataset also includes the nutrients’ percentage of the United States Recommended Daily Allowance (USRDA), which will not be included in this analysis.</p>
+<pre class="r"><code>raw_df_2 &lt;- read_csv(&quot;usda_nutrients.csv&quot;)</code></pre>
+<pre class="r"><code>raw_df_meat &lt;- raw_df_2 %&gt;% 
+  filter (FoodGroup %in% c(&quot;Finfish and Shellfish Products&quot;, &quot;Poultry Products&quot;,&quot;Pork Products&quot;, &quot;Lamb, Veal, and Game Products&quot;, &quot;Beef Products&quot;)) %&gt;% # Selecting all meat products in the dataset
+  clean_names() %&gt;% 
+  select(food_group,calcium_mg, copper_mcg, iron_mg, magnesium_mg, manganese_mg, phosphorus_mg, selenium_mcg, zinc_mg) # Selecting all mineral nutrients in the dataset</code></pre>
+<pre class="r"><code># Selecting the numerical part of the dataset for PCA analysis
+pca_df &lt;- raw_df_meat[c(2:9)]
+
+meat_pca &lt;- prcomp(pca_df, scale = TRUE)
+
+# Un-comment this if you need see the result of PCA
+# summary(meat_pca)</code></pre>
+<pre class="r"><code>#Finishing biplot
+my_biplot &lt;- autoplot(meat_pca, 
+                      data = raw_df_meat,
+                      colour = &#39;food_group&#39;,
+                      alpha = 0.5,
+                      size = 0.5,
+                      loadings.colour = &quot;#00A08A&quot;,
+                      loadings.label = TRUE,
+                      loadings.label.size = 3,
+                      loadings.label.colour = &quot;black&quot;,
+                      loadings.label.repel = TRUE) +
+  theme_minimal()+
+  scale_color_manual(values=wes_palette(n=5, name=&quot;FantasticFox1&quot;))+
+  labs(color = &quot;Food Group&quot;)+
+  xlab(&quot;Principal Component 1 (25.62%)&quot;)+
+  ylab(&quot;Principal Component 2 (17.27%)&quot;)
+  
+
+my_biplot</code></pre>
+<p><img src="/project/principal-component-analysis-on-meat-products/ESM244_HW1_Task2_TedJiang_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>Figure 1. Principal Component Analysis Biplot Showing Mineral Nutrients Contents Associations in Meat Products.</strong> Principal component 1 and principal component 2 together can expalin 42.89% of the data variance. Color of the points indicates the type of the meat (Source: USDA, 2019).</p>
+<div id="take-aways-from-the-biplot" class="section level5">
+<h5>Take-aways from the biplot:</h5>
+<ol style="list-style-type: decimal">
+<li>In meat products, mineral nutrients usually have a positive correlation with each other. This means that when a product is rich in one mineral nutrient, it is usually rich in other nutirents too. However, this correlation can be stronger for some nutrients, while neglegible for others.<br />
+</li>
+<li>Four pairs of mineral nutrients–calcium/magnesium, phosphorus/selenium, iron/copper, and zinc/manganese–have strong correlations within each pair. For example, if a product is rich in calcium, it is predicted that it is also rich in magnesium.<br />
+</li>
+<li>On top of the four pairs, the mineral nutrients can also be separated into two groups–one with calcium, magnesium, phosphorus, and selenium, while the other one with iron, copper, zinc, and manganese. The nutrients within each group have relatively strong correlation with each other.<br />
+</li>
+<li>The correlation between calcium and zinc/manganese is very weak, meaning that the richness of calcium is predicted to not affect the richness of zinc or manganese.</li>
+<li>Products from the same food group are usually clustered together, meaning that meat of the same type usually have similar nutrients content with each other.</li>
+</ol>
+</div>
+<div id="reference" class="section level5">
+<h5>Reference:</h5>
+<ol style="list-style-type: decimal">
+<li>USDA. (2019). Food nutrient information for raw fruits and veggies from USDA (National Nutrient Database. Available at: <a href="https://fdc.nal.usda.gov/index.html" class="uri">https://fdc.nal.usda.gov/index.html</a></li>
+</ol>
+</div>

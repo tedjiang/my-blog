@@ -1,0 +1,1268 @@
+---
+title: "Electricity Power Plants in the United States"
+author: "Yingfei Jiang"
+date: "1/31/2020"
+output: html_document
+---
+
+<script src="/rmarkdown-libs/kePrint/kePrint.js"></script>
+
+
+<p>This project will explore the electricity generation plants in the United States and their air pollutants and greenhouse gas (GHG) emissions. There are three parts in this porject.<br />
+Part one explores the average electricity GHG emission factor on a state level and how they are affected by the electricty mix in different state (renewable-to-total and natural-gas-to-fossil-fuel). In carbon accounting, this is called <strong>scope II emission</strong>.<br />
+Part two explores the generation plants in ten most populated states, and their total <span class="math inline">\(NO_x\)</span>, <span class="math inline">\(SO_2\)</span>, and GHG emission in 2018.<br />
+Part three explores the electricity generation and emissions for California counties in 2018.</p>
+<div class="figure">
+<img src="diablo_canyon.jpg" alt="Figure 1. The Diablo Canyon Nuclear Power Plant. Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)" />
+<p class="caption"><strong>Figure 1. The Diablo Canyon Nuclear Power Plant.</strong> Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)</p>
+</div>
+<pre class="r"><code>#Read in data sets.
+
+raw_df &lt;- read_excel(&quot;egrid2018_data.xlsx&quot;, skip = 1, sheet = &quot;PLNT18&quot;)
+raw_df_st &lt;- read_excel(&quot;egrid2018_data.xlsx&quot;, skip = 1, sheet = &quot;ST18&quot;)</code></pre>
+<pre class="r"><code>clean_df &lt;- raw_df %&gt;% 
+  clean_names() %&gt;% 
+  select(pstatabb, cntyname, fipsst, fipscnty, plprmfl, plfuelct, coalflag, namepcap, plnoxrta, plso2rta, plco2rta, plch4rta, pln2orta, plc2erta, plso2an, plnoxan, plco2eqa, plngenan) #Selecting the cateogries of interest</code></pre>
+<pre class="r"><code>clean_st_df &lt;- raw_df_st %&gt;% 
+  clean_names() %&gt;% 
+  select(pstatabb, stnoxrta, stso2rta, namepcap, stgenatn, stc2erta, sttrpr, stgspr, sttnpr, stngenan) %&gt;% 
+  mutate(gas_ratio = stgspr/sttnpr) #Calculating the percentage of gas-generated electricity among all fossil fuel-generated electricity.</code></pre>
+<div id="part-one.-the-average-electricity-ghg-emission-factor-on-a-state-level." class="section level4">
+<h4><strong>Part One.</strong> The average electricity GHG emission factor on a state level.</h4>
+<pre class="r"><code>state_bubble &lt;- ggplot(clean_st_df, aes(x = sttrpr*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = &quot;#5BBCD6&quot;)+
+  scale_size(range = c(.1, 10), name=&quot;Total Generation (MWh)&quot;)+
+  xlab(&quot;Renewable Electricity Percentage&quot;)+
+  ylab(&quot;Average Electricity GHG Emission Factor (lb/MWh)&quot;)+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+  
+state_bubble</code></pre>
+<p><img src="/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><strong>Figure 2. The Relationship between Average Electricity GHG Emission Factor and Renewable Generation Percentage on a State Level.</strong> Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)</p>
+<pre class="r"><code>clean_st_fossil &lt;- clean_st_df %&gt;% 
+  filter(sttnpr &gt; 0.80)
+
+state_fs_bubble &lt;- ggplot(clean_st_fossil, aes(x = gas_ratio*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = &quot;#F98400&quot;)+
+  scale_size(range = c(.1, 10), name=&quot;Total Generation (MWh)&quot;)+
+  xlab(&quot;Pencentage of Natural-gas-electricity among Fossil-fuel-electricity&quot;)+
+  ylab(&quot;Average Electricity GHG Emission Factor (lb/MWh)&quot;)+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+state_fs_bubble</code></pre>
+<p><img src="/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><strong>Figure 3. The Relationship between Average Electricity GHG Emission Factor and the Pencentage of Natural-gas-electricity among Fossil-fuel-electricity for States with More than 80% Non-renewable Electricity.</strong> Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)</p>
+</div>
+<div id="part-two.-the-generation-plants-in-ten-most-populated-states." class="section level4">
+<h4><strong>Part Two.</strong> The generation plants in ten most populated states.</h4>
+<pre class="r"><code>gas_df &lt;- clean_df %&gt;% 
+  filter (plfuelct %in% c(&quot;GAS&quot;, &quot;OIL&quot;, &quot;COAL&quot;))%&gt;% # Selecting all fossil fuels
+  group_by(pstatabb) %&gt;% 
+  select(-coalflag) %&gt;% 
+  drop_na() %&gt;% 
+  filter(pstatabb %in% c(&quot;CA&quot;, &quot;TX&quot;, &quot;FL&quot;, &quot;NY&quot;, &quot;PA&quot;, &quot;IL&quot;, &quot;OH&quot;, &quot;GA&quot;, &quot;NC&quot;, &quot;MI&quot;))# Selecting the top ten populated states</code></pre>
+<pre class="r"><code>gasvis2 &lt;- ggplot(gas_df, aes(x = pstatabb, y = plso2an))+
+  geom_jitter(width = 0.20, aes(color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&quot;Darjeeling1&quot;))+
+  xlab(&quot;State&quot;)+
+  ylab(&quot;2018 Annual Sulfur Dioxide Emssion (tons)&quot;)+
+  labs(color = &quot;Plant Type&quot;)
+
+gasvis2</code></pre>
+<p><img src="/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><strong>Figure 4. Total Annual <span class="math inline">\(SO_2\)</span> Emission on a Power Plant Level for Ten Most Populated States.</strong> Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)</p>
+<pre class="r"><code>gasvis4 &lt;- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plnoxan,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&quot;Darjeeling1&quot;))+
+  xlab(&quot;State&quot;)+
+  ylab(&quot;2018 Annual NOx Emssion (tons)&quot;)+
+  labs(color = &quot;Plant Type&quot;)
+
+gasvis4</code></pre>
+<p><img src="/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><strong>Figure 5. Total Annual <span class="math inline">\(NO_x\)</span> Emission on a Power Plant Level for Ten Most Populated States.</strong> Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)</p>
+<pre class="r"><code>gasvis5 &lt;- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plco2eqa,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name=&quot;Darjeeling1&quot;))+
+  xlab(&quot;State&quot;)+
+  ylab(&quot;2018 Annual GHG Emssion (tons carbon dioxide equivalent)&quot;)+
+  labs(color = &quot;Plant Type&quot;)
+
+gasvis5</code></pre>
+<p><img src="/project/electricity-generation-in-the-united-states/ESM244_HW1_Task1_TedJiang_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>Figure 6. Total Annual GHG Emission on a Power Plant Level for Ten Most Populated States.</strong> Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)</p>
+</div>
+<div id="part-three.-electricity-generation-and-emissions-for-california-counties" class="section level4">
+<h4><strong>Part Three.</strong> Electricity generation and emissions for California counties</h4>
+<pre class="r"><code>ca_df &lt;- clean_df %&gt;% 
+  filter(pstatabb == &quot;CA&quot;) %&gt;% 
+  select(-coalflag) %&gt;% 
+  mutate(cntyname = str_to_title(cntyname)) %&gt;% 
+  group_by(cntyname) %&gt;% 
+  mutate(plso2an = replace_na(plso2an, 0)) %&gt;% 
+  mutate(plnoxan = replace_na(plnoxan, 0)) %&gt;% 
+  filter (is.na (plngenan) == FALSE) %&gt;% 
+  summarise(nox_total = sum(plnoxan),
+            so2_total = sum(plso2an),
+            gen_total = sum(plngenan)) %&gt;% 
+  mutate(nox_rt = scales::number(nox_total*2000/gen_total, accuracy = 0.001),
+         so2_rt = scales::number(so2_total*2000/gen_total, accuracy = 0.001)) %&gt;% 
+  mutate(nox_rt = cell_spec(nox_rt, &quot;html&quot;, bold = T, color = ifelse(nox_rt &gt; 0.377, &quot;#F2AD00&quot;, &quot;#00A08A&quot;), background = &quot;#d7eff5&quot;),
+         so2_rt = cell_spec(so2_rt, &quot;html&quot;, bold = T, color = ifelse(so2_rt &gt; 0.036, &quot;#F2AD00&quot;, &quot;#00A08A&quot;), background = &quot;#d7eff5&quot;)) 
+
+
+title &lt;- c(&quot;County&quot;, &quot;Total NOx Emission (tons)&quot;, &quot;Total SO2 Emission (tons)&quot;, &quot;Total Net Generation (MWh)&quot;, &quot;NOx Emission Rate (lb/MWh)&quot;, &quot;SO2 Emission Rate(lb/MWh)&quot;)
+
+colnames(ca_df) &lt;- title</code></pre>
+<pre class="r"><code>my_tbl &lt;- ca_df %&gt;% 
+  kable(escape=F, align = &quot;r&quot;) %&gt;% 
+  kable_styling(bootstrap_options = c(&quot;striped&quot;, &quot;hover&quot;, &quot;condensed&quot;)) %&gt;% 
+  column_spec(1, bold = T, color = &quot;white&quot;, background = &quot;#046C9A&quot;) %&gt;% 
+  row_spec(0, bold = T, color = &quot;white&quot;, background = &quot;#F98400&quot;)%&gt;%
+  scroll_box(width = &quot;100%&quot;, height = &quot;300px&quot;)</code></pre>
+<strong>Table 1. 2018 Electricity Generation and Emission for California Counties.</strong> Total <span class="math inline">\(NO_x\)</span> And <span class="math inline">\(SO_2\)</span> emission, total net generation amount, and corresponding emission factor are shown in the table. If the emission factor for a pollutant type is higher than California average, it is marked as yellow. Otherwise, it is marked as green. (Source: eGrid, 2018)
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:300px; overflow-x: scroll; width:100%; ">
+<table class="table table-striped table-hover table-condensed" style="margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+County
+</th>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+Total NOx Emission (tons)
+</th>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+Total SO2 Emission (tons)
+</th>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+Total Net Generation (MWh)
+</th>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+NOx Emission Rate (lb/MWh)
+</th>
+<th style="text-align:right;font-weight: bold;color: white !important;background-color: #F98400 !important;position: sticky; top:0; background-color: #FFFFFF;">
+SO2 Emission Rate(lb/MWh)
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Alameda
+</td>
+<td style="text-align:right;">
+723.060
+</td>
+<td style="text-align:right;">
+23.439
+</td>
+<td style="text-align:right;">
+2033905.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.711</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.023</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Amador
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+738753.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Butte
+</td>
+<td style="text-align:right;">
+8.811
+</td>
+<td style="text-align:right;">
+2.135
+</td>
+<td style="text-align:right;">
+2353681.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.007</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.002</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Calaveras
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+493930.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Colusa
+</td>
+<td style="text-align:right;">
+163.039
+</td>
+<td style="text-align:right;">
+34.964
+</td>
+<td style="text-align:right;">
+3152517.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.103</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.022</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Contra Costa
+</td>
+<td style="text-align:right;">
+3419.368
+</td>
+<td style="text-align:right;">
+58.228
+</td>
+<td style="text-align:right;">
+14286071.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.479</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.008</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+El Dorado
+</td>
+<td style="text-align:right;">
+167.884
+</td>
+<td style="text-align:right;">
+0.200
+</td>
+<td style="text-align:right;">
+1360204.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.247</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Fresno
+</td>
+<td style="text-align:right;">
+256.030
+</td>
+<td style="text-align:right;">
+39.102
+</td>
+<td style="text-align:right;">
+6871723.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.075</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.011</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Glenn
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+7791.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Humboldt
+</td>
+<td style="text-align:right;">
+4732.149
+</td>
+<td style="text-align:right;">
+49.976
+</td>
+<td style="text-align:right;">
+536932.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">17.627</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.186</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Imperial
+</td>
+<td style="text-align:right;">
+54.158
+</td>
+<td style="text-align:right;">
+1413.840
+</td>
+<td style="text-align:right;">
+8388389.07
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.013</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.337</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Inyo
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+549.855
+</td>
+<td style="text-align:right;">
+1373519.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.801</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Kern
+</td>
+<td style="text-align:right;">
+6663.567
+</td>
+<td style="text-align:right;">
+122.718
+</td>
+<td style="text-align:right;">
+32066102.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.416</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.008</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Kings
+</td>
+<td style="text-align:right;">
+268.177
+</td>
+<td style="text-align:right;">
+0.526
+</td>
+<td style="text-align:right;">
+1197595.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.448</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.001</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Lake
+</td>
+<td style="text-align:right;">
+1.306
+</td>
+<td style="text-align:right;">
+0.270
+</td>
+<td style="text-align:right;">
+943400.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.003</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.001</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Lassen
+</td>
+<td style="text-align:right;">
+423.338
+</td>
+<td style="text-align:right;">
+33.600
+</td>
+<td style="text-align:right;">
+274015.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">3.090</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.245</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Los Angeles
+</td>
+<td style="text-align:right;">
+8013.808
+</td>
+<td style="text-align:right;">
+497.241
+</td>
+<td style="text-align:right;">
+22910992.61
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.700</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.043</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Madera
+</td>
+<td style="text-align:right;">
+283.825
+</td>
+<td style="text-align:right;">
+0.490
+</td>
+<td style="text-align:right;">
+890244.99
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.638</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.001</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Marin
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+5.402
+</td>
+<td style="text-align:right;">
+29920.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.361</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Mariposa
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+269655.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Mendocino
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+19041.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Merced
+</td>
+<td style="text-align:right;">
+28.840
+</td>
+<td style="text-align:right;">
+0.158
+</td>
+<td style="text-align:right;">
+251373.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.229</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.001</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Mono
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+400981.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Monterey
+</td>
+<td style="text-align:right;">
+257.263
+</td>
+<td style="text-align:right;">
+16.413
+</td>
+<td style="text-align:right;">
+4975840.84
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.103</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.007</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Napa
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+1566.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Nevada
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+273679.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Orange
+</td>
+<td style="text-align:right;">
+1995.386
+</td>
+<td style="text-align:right;">
+81.375
+</td>
+<td style="text-align:right;">
+1442024.21
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">2.767</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.113</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Placer
+</td>
+<td style="text-align:right;">
+181.772
+</td>
+<td style="text-align:right;">
+46.269
+</td>
+<td style="text-align:right;">
+1976944.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.184</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.047</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Plumas
+</td>
+<td style="text-align:right;">
+120.342
+</td>
+<td style="text-align:right;">
+20.313
+</td>
+<td style="text-align:right;">
+1342157.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.179</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.030</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Riverside
+</td>
+<td style="text-align:right;">
+400.508
+</td>
+<td style="text-align:right;">
+74.247
+</td>
+<td style="text-align:right;">
+9105865.01
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.088</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.016</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Sacramento
+</td>
+<td style="text-align:right;">
+147.373
+</td>
+<td style="text-align:right;">
+27.541
+</td>
+<td style="text-align:right;">
+6315421.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.047</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.009</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Benito
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+220169.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Bernardino
+</td>
+<td style="text-align:right;">
+983.456
+</td>
+<td style="text-align:right;">
+17.332
+</td>
+<td style="text-align:right;">
+10593186.84
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.186</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.003</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Diego
+</td>
+<td style="text-align:right;">
+2076.426
+</td>
+<td style="text-align:right;">
+45.743
+</td>
+<td style="text-align:right;">
+4825121.99
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.861</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.019</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Francisco
+</td>
+<td style="text-align:right;">
+221.592
+</td>
+<td style="text-align:right;">
+0.928
+</td>
+<td style="text-align:right;">
+103400.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">4.286</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.018</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Joaquin
+</td>
+<td style="text-align:right;">
+444.818
+</td>
+<td style="text-align:right;">
+18.047
+</td>
+<td style="text-align:right;">
+2870108.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.310</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.013</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Luis Obispo
+</td>
+<td style="text-align:right;">
+2.446
+</td>
+<td style="text-align:right;">
+2.098
+</td>
+<td style="text-align:right;">
+20619666.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+San Mateo
+</td>
+<td style="text-align:right;">
+114.136
+</td>
+<td style="text-align:right;">
+15.055
+</td>
+<td style="text-align:right;">
+128516.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">1.776</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.234</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Santa Barbara
+</td>
+<td style="text-align:right;">
+13.808
+</td>
+<td style="text-align:right;">
+4.696
+</td>
+<td style="text-align:right;">
+193125.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.143</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.049</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Santa Clara
+</td>
+<td style="text-align:right;">
+435.387
+</td>
+<td style="text-align:right;">
+10.611
+</td>
+<td style="text-align:right;">
+3693010.01
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.236</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.006</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Santa Cruz
+</td>
+<td style="text-align:right;">
+29.756
+</td>
+<td style="text-align:right;">
+6.015
+</td>
+<td style="text-align:right;">
+60099.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.990</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.200</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Shasta
+</td>
+<td style="text-align:right;">
+580.339
+</td>
+<td style="text-align:right;">
+106.119
+</td>
+<td style="text-align:right;">
+6563004.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.177</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.032</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Sierra
+</td>
+<td style="text-align:right;">
+89.447
+</td>
+<td style="text-align:right;">
+9.504
+</td>
+<td style="text-align:right;">
+71384.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">2.506</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.266</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Siskiyou
+</td>
+<td style="text-align:right;">
+57.415
+</td>
+<td style="text-align:right;">
+3.879
+</td>
+<td style="text-align:right;">
+324458.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.354</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.024</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Solano
+</td>
+<td style="text-align:right;">
+402.206
+</td>
+<td style="text-align:right;">
+16.717
+</td>
+<td style="text-align:right;">
+3182720.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.253</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.011</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Sonoma
+</td>
+<td style="text-align:right;">
+151.514
+</td>
+<td style="text-align:right;">
+6.672
+</td>
+<td style="text-align:right;">
+5636210.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.054</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.002</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Stanislaus
+</td>
+<td style="text-align:right;">
+402.367
+</td>
+<td style="text-align:right;">
+27.071
+</td>
+<td style="text-align:right;">
+2231070.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.361</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.024</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Sutter
+</td>
+<td style="text-align:right;">
+149.475
+</td>
+<td style="text-align:right;">
+2.384
+</td>
+<td style="text-align:right;">
+958759.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.312</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.005</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Tehama
+</td>
+<td style="text-align:right;">
+194.016
+</td>
+<td style="text-align:right;">
+0.229
+</td>
+<td style="text-align:right;">
+46682.01
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">8.312</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.010</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Trinity
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+299486.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Tulare
+</td>
+<td style="text-align:right;">
+115.000
+</td>
+<td style="text-align:right;">
+2.043
+</td>
+<td style="text-align:right;">
+799120.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.288</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.005</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Tuolumne
+</td>
+<td style="text-align:right;">
+230.360
+</td>
+<td style="text-align:right;">
+34.424
+</td>
+<td style="text-align:right;">
+2719000.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.169</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.025</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Ventura
+</td>
+<td style="text-align:right;">
+1725.350
+</td>
+<td style="text-align:right;">
+11.613
+</td>
+<td style="text-align:right;">
+1223917.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">2.819</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.019</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Yolo
+</td>
+<td style="text-align:right;">
+83.936
+</td>
+<td style="text-align:right;">
+44.944
+</td>
+<td style="text-align:right;">
+255407.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.657</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #F2AD00 !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.352</span>
+</td>
+</tr>
+<tr>
+<td style="text-align:right;font-weight: bold;color: white !important;background-color: #046C9A !important;">
+Yuba
+</td>
+<td style="text-align:right;">
+0.000
+</td>
+<td style="text-align:right;">
+4.849
+</td>
+<td style="text-align:right;">
+1311009.00
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.000</span>
+</td>
+<td style="text-align:right;">
+<span style=" font-weight: bold;    color: #00A08A !important;border-radius: 4px; padding-right: 4px; padding-left: 4px; background-color: #d7eff5 !important;">0.007</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="reference" class="section level5">
+<h5>Reference:</h5>
+<ol style="list-style-type: decimal">
+<li>US EPA. (2020). Emissions &amp; Generation Resource Integrated Database (eGRID). Available at: <a href="https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid" class="uri">https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid</a></li>
+<li>Cardwell, D. (2016). California’s Last Nuclear Power Plant Could Close. The New York Times. Available at: <a href="https://www.nytimes.com/2016/06/22/business/californias-diablo-canyon-nuclear-power-plant.html" class="uri">https://www.nytimes.com/2016/06/22/business/californias-diablo-canyon-nuclear-power-plant.html</a></li>
+</ol>
+</div>
+</div>

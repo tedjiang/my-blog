@@ -1,0 +1,182 @@
+---
+title: "Electricity Power Plants in the United States"
+author: "Yingfei Jiang"
+date: "1/31/2020"
+output: html_document
+---
+
+This project will explore the electricity generation plants in the United States and their air pollutants and greenhouse gas (GHG) emissions. There are three parts in this porject.  
+Part one explores the average electricity GHG emission factor on a state level and how they are affected by the electricty mix in different state (renewable-to-total and natural-gas-to-fossil-fuel). In carbon accounting, this is called **scope II emission**.  
+Part two explores the generation plants in ten most populated states, and their total $NO_x$, $SO_2$, and GHG emission in 2018.  
+Part three explores the electricity generation and emissions for California counties in 2018.
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(ggrepel)
+library(ggridges)
+library(wesanderson)
+library(kableExtra)
+```
+
+![**Figure 1. The Diablo Canyon Nuclear Power Plant.** Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)](diablo_canyon.jpg)
+
+```{r}
+
+#Read in data sets.
+
+raw_df <- read_excel("egrid2018_data.xlsx", skip = 1, sheet = "PLNT18")
+raw_df_st <- read_excel("egrid2018_data.xlsx", skip = 1, sheet = "ST18")
+```
+
+```{r}
+clean_df <- raw_df %>% 
+  clean_names() %>% 
+  select(pstatabb, cntyname, fipsst, fipscnty, plprmfl, plfuelct, coalflag, namepcap, plnoxrta, plso2rta, plco2rta, plch4rta, pln2orta, plc2erta, plso2an, plnoxan, plco2eqa, plngenan) #Selecting the cateogries of interest
+  
+```
+
+```{r}
+clean_st_df <- raw_df_st %>% 
+  clean_names() %>% 
+  select(pstatabb, stnoxrta, stso2rta, namepcap, stgenatn, stc2erta, sttrpr, stgspr, sttnpr, stngenan) %>% 
+  mutate(gas_ratio = stgspr/sttnpr) #Calculating the percentage of gas-generated electricity among all fossil fuel-generated electricity.
+  
+```
+
+#### **Part One.** The average electricity GHG emission factor on a state level.
+
+```{r}
+
+state_bubble <- ggplot(clean_st_df, aes(x = sttrpr*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = "#5BBCD6")+
+  scale_size(range = c(.1, 10), name="Total Generation (MWh)")+
+  xlab("Renewable Electricity Percentage")+
+  ylab("Average Electricity GHG Emission Factor (lb/MWh)")+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+  
+state_bubble
+
+```
+  
+**Figure 2. The Relationship between Average Electricity GHG Emission Factor and Renewable Generation Percentage on a State Level.** Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)
+```{r}
+clean_st_fossil <- clean_st_df %>% 
+  filter(sttnpr > 0.80)
+
+state_fs_bubble <- ggplot(clean_st_fossil, aes(x = gas_ratio*100, y = stc2erta, size = stngenan)) +
+  geom_point(alpha = 0.8, color = "#F98400")+
+  scale_size(range = c(.1, 10), name="Total Generation (MWh)")+
+  xlab("Pencentage of Natural-gas-electricity among Fossil-fuel-electricity")+
+  ylab("Average Electricity GHG Emission Factor (lb/MWh)")+
+  geom_text_repel(aes(label = pstatabb), size = 2)+
+  theme_classic()
+
+state_fs_bubble
+```
+  
+**Figure 3. The Relationship between Average Electricity GHG Emission Factor and the Pencentage of Natural-gas-electricity among Fossil-fuel-electricity for States with More than 80% Non-renewable Electricity.** Each bubble stands for a state. The size of the bubble indicates the total electricity generation in the state. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)  
+
+#### **Part Two.** The generation plants in ten most populated states.
+```{r}
+gas_df <- clean_df %>% 
+  filter (plfuelct %in% c("GAS", "OIL", "COAL"))%>% # Selecting all fossil fuels
+  group_by(pstatabb) %>% 
+  select(-coalflag) %>% 
+  drop_na() %>% 
+  filter(pstatabb %in% c("CA", "TX", "FL", "NY", "PA", "IL", "OH", "GA", "NC", "MI"))# Selecting the top ten populated states
+
+```
+
+```{r}
+
+gasvis2 <- ggplot(gas_df, aes(x = pstatabb, y = plso2an))+
+  geom_jitter(width = 0.20, aes(color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name="Darjeeling1"))+
+  xlab("State")+
+  ylab("2018 Annual Sulfur Dioxide Emssion (tons)")+
+  labs(color = "Plant Type")
+
+gasvis2
+```
+  
+**Figure 4. Total Annual $SO_2$ Emission on a Power Plant Level for Ten Most Populated States.** Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)
+
+```{r}
+gasvis4 <- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plnoxan,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name="Darjeeling1"))+
+  xlab("State")+
+  ylab("2018 Annual NOx Emssion (tons)")+
+  labs(color = "Plant Type")
+
+gasvis4
+```
+  
+**Figure 5. Total Annual $NO_x$ Emission on a Power Plant Level for Ten Most Populated States.** Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)
+```{r}
+gasvis5 <- ggplot(gas_df, aes(x = pstatabb))+
+  geom_jitter(width = 0.20, aes(y = plco2eqa,color = plfuelct))+
+  theme_classic()+
+  scale_y_continuous(expand = c(0, 0))+
+  scale_color_manual(values=wes_palette(n=3, name="Darjeeling1"))+
+  xlab("State")+
+  ylab("2018 Annual GHG Emssion (tons carbon dioxide equivalent)")+
+  labs(color = "Plant Type")
+
+gasvis5
+
+```
+  
+**Figure 6. Total Annual GHG Emission on a Power Plant Level for Ten Most Populated States.** Each point stands for a power plant. The color of the point indicates the type of the power plant. The data for generation and GHG emission are from the year of 2018. (Source: eGrid, 2018)  
+
+#### **Part Three.** Electricity generation and emissions for California counties
+
+```{r}
+
+ca_df <- clean_df %>% 
+  filter(pstatabb == "CA") %>% 
+  select(-coalflag) %>% 
+  mutate(cntyname = str_to_title(cntyname)) %>% 
+  group_by(cntyname) %>% 
+  mutate(plso2an = replace_na(plso2an, 0)) %>% 
+  mutate(plnoxan = replace_na(plnoxan, 0)) %>% 
+  filter (is.na (plngenan) == FALSE) %>% 
+  summarise(nox_total = sum(plnoxan),
+            so2_total = sum(plso2an),
+            gen_total = sum(plngenan)) %>% 
+  mutate(nox_rt = scales::number(nox_total*2000/gen_total, accuracy = 0.001),
+         so2_rt = scales::number(so2_total*2000/gen_total, accuracy = 0.001)) %>% 
+  mutate(nox_rt = cell_spec(nox_rt, "html", bold = T, color = ifelse(nox_rt > 0.377, "#F2AD00", "#00A08A"), background = "#d7eff5"),
+         so2_rt = cell_spec(so2_rt, "html", bold = T, color = ifelse(so2_rt > 0.036, "#F2AD00", "#00A08A"), background = "#d7eff5")) 
+
+
+title <- c("County", "Total NOx Emission (tons)", "Total SO2 Emission (tons)", "Total Net Generation (MWh)", "NOx Emission Rate (lb/MWh)", "SO2 Emission Rate(lb/MWh)")
+
+colnames(ca_df) <- title
+
+```
+
+```{r}
+my_tbl <- ca_df %>% 
+  kable(escape=F, align = "r") %>% 
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed")) %>% 
+  column_spec(1, bold = T, color = "white", background = "#046C9A") %>% 
+  row_spec(0, bold = T, color = "white", background = "#F98400")%>%
+  scroll_box(width = "100%", height = "300px")
+```
+**Table 1. 2018 Electricity Generation and Emission for California Counties.** Total $NO_x$ And $SO_2$ emission, total net generation amount, and corresponding emission factor are shown in the table. If the emission factor for a pollutant type is higher than California average, it is marked as yellow. Otherwise, it is marked as green. (Source: eGrid, 2018)
+```{r, echo = FALSE}
+my_tbl
+```
+
+##### Reference:  
+1. US EPA. (2020). Emissions & Generation Resource Integrated Database (eGRID). Available at: https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid
+2. Cardwell, D. (2016). California’s Last Nuclear Power Plant Could Close. The New York Times. Available at: https://www.nytimes.com/2016/06/22/business/californias-diablo-canyon-nuclear-power-plant.html

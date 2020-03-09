@@ -1,0 +1,25 @@
+---
+title: "blog_down"
+author: "Yingfei Jiang"
+date: "3/8/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(blogdown)
+```
+
+
+```{r, eval = FALSE}
+new_site(theme = "gcushen/hugo-academic", 
+         sample = TRUE, 
+         theme_example = TRUE, 
+         empty_dirs = TRUE,
+         to_yaml = TRUE)
+```
+
+```{r, eval = FALSE}
+blogdown::serve_site()
+```
