@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Yingfei (Ted) Jiang">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="/project/time-series-for-tx-power/time-series-for-tx-power/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#2962ff">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+  
+
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="/project/time-series-for-tx-power/time-series-for-tx-power/">
+
+  
+  
+  
+  
+  
+    
+    
+  
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="og:site_name" content="Yingfei (Ted) Jiang">
+  <meta property="og:url" content="/project/time-series-for-tx-power/time-series-for-tx-power/">
+  <meta property="og:title" content="Time Series for TX power | Yingfei (Ted) Jiang">
+  <meta property="og:description" content="As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years."><meta property="og:image" content="img/map[gravatar:%!s(bool=false) shape:circle]">
+  <meta property="twitter:image" content="img/map[gravatar:%!s(bool=false) shape:circle]"><meta property="og:locale" content="en-us">
+  
+    
+    
+  
+
+  
+
+
+    
+
+
+
+
+
+
+
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "/project/time-series-for-tx-power/time-series-for-tx-power/"
+  },
+  "headline": "Time Series for TX power",
+  
+  "datePublished": "0001-01-01T00:00:00Z",
+  "dateModified": "0001-01-01T00:00:00Z",
+  
+  "author": {
+    "@type": "Person",
+    "name": "Yingfei (Ted) Jiang"
+  },
+  
+  "publisher": {
+    "@type": "Organization",
+    "name": "Yingfei (Ted) Jiang",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png"
+    }
+  },
+  "description": "As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years."
+}
+</script>
+
+  
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Time Series for TX power | Yingfei (Ted) Jiang</title>
+
+</head>
+
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/">Yingfei (Ted) Jiang</a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/">Yingfei (Ted) Jiang</a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/files/cv.pdf"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item">
+        <a class="nav-link js-dark-toggle" href="#"><i class="fas fa-moon" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  <article class="article article-project">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+  
+  
+<div class="article-container pt-3">
+  <h1>Time Series for TX power</h1>
+
+  
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    Jan 1, 0001
+  </span>
+  
+
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+</div>
+
+
+
+  <div class="article-container">
+
+    <div class="article-style">
+      
+
+
+<p>As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years. This project will explore the geographic distribution of TX power plants in 2018, the seasonal change of generation amount for four main generation types, and the generation mix change from 2001 to 2018.</p>
+<div class="figure">
+<img src="texas-wind.jpg" alt="Figure 1. A Wind Farm in TX. With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)" />
+<p class="caption"><strong>Figure 1. A Wind Farm in TX.</strong> With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)</p>
+</div>
+<div id="prepare-the-data." class="section level4">
+<h4><strong>0. Prepare the data.</strong></h4>
+<pre class="r"><code>#Filtering TX plants
+
+plant_df_raw &lt;- read_excel(&quot;egrid2018_data.xlsx&quot;, skip = 1, sheet = &quot;PLNT18&quot;)
+
+plant_tx_df &lt;- plant_df_raw %&gt;% 
+  filter(PSTATABB == &quot;TX&quot;) %&gt;% 
+  clean_names() %&gt;% 
+  filter(plngenan &gt;= 10000) %&gt;% 
+  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&gt;% 
+  drop_na() %&gt;% 
+  mutate(type = case_when(
+    plfuelct %in% c(&quot;OFSL&quot;, &quot;OTHF&quot;) ~ &quot;OTHER&quot;,
+    TRUE  ~ plfuelct
+  )) %&gt;% 
+  mutate(type = factor(type, levels = c(&quot;COAL&quot;, &quot;OIL&quot;, &quot;GAS&quot;, &quot;BIOMASS&quot;, &quot;NUCLEAR&quot;, &quot;HYDRO&quot;, &quot;WIND&quot;, &quot;OTHER&quot;, &quot;SOLAR&quot;))) #Changing levels to make the color match the type later
+
+plant_tx_sf &lt;- st_as_sf(plant_tx_df, coords = c(&quot;lon&quot;, &quot;lat&quot;), crs = 4326)</code></pre>
+<pre class="r"><code>raw1 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2001_2002_FINAL&quot;)
+raw2 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2003_2004_FINAL&quot;)
+raw3 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2005-2007_FINAL&quot;)
+raw4 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2008-2009_FINAL&quot;)
+raw5 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2012_FINAL&quot;)
+raw6 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2013_FINAL&quot;)
+raw7 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2014_Final&quot;)
+raw8 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2015_Final&quot;)
+raw9 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2016_Preliminary&quot;)
+raw10 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2017_Preliminary&quot;)
+raw11 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2018_Preliminary&quot;)
+raw12 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2019_Preliminary&quot;)
+raw13 &lt;- read_excel(&quot;generation_monthly.xlsx&quot;, sheet = &quot;2010-2011_FINAL&quot;)</code></pre>
+<pre class="r"><code>raw_df &lt;- bind_rows(raw1, raw2, raw3, raw4, raw5, raw6, raw7, raw8, raw9, raw10, raw11, raw12, raw13) %&gt;% 
+  clean_names()</code></pre>
+<pre class="r"><code>tx_ts &lt;- raw_df %&gt;% 
+  filter(state == &quot;TX&quot;) %&gt;% 
+  filter(type_of_producer == &quot;Total Electric Power Industry&quot;) %&gt;% 
+  filter(year != 2019) %&gt;% 
+  mutate(yearmonth = str_c(as.character(year), &quot;/&quot;, as.character(month), &quot;/&quot;, &quot;1&quot;)) %&gt;% 
+  mutate(yearmonth = ymd(yearmonth)) %&gt;% 
+  mutate(ym_sep = yearmonth(yearmonth)) %&gt;% 
+  mutate(type = case_when(
+    energy_source == &quot;Coal&quot; ~ &quot;COAL&quot;,
+    energy_source == &quot;Petroleum&quot; ~ &quot;OIL&quot;,
+    energy_source %in% c(&quot;Natural Gas&quot;, &quot;Other Gases&quot; ) ~ &quot;GAS&quot;,
+    energy_source == &quot;Nuclear&quot; ~ &quot;NUCLEAR&quot;,
+    energy_source == &quot;Hydroelectric Conventional&quot;  ~ &quot;HYDRO&quot;,
+    energy_source == &quot;Wind&quot; ~ &quot;WIND&quot;,
+    energy_source == &quot;Solar Thermal and Photovoltaic&quot; ~ &quot;SOLAR&quot;,
+    energy_source %in% c(&quot;Wood and Wood Derived Fuels&quot;, &quot;Other Biomass&quot;) ~ &quot;BIOMASS&quot;,
+    energy_source == &quot;Other&quot; ~ &quot;OTHER&quot;,
+    energy_source == &quot;Total&quot; ~ &quot;TOTAL&quot;
+  )) %&gt;% 
+  group_by(ym_sep, yearmonth, type) %&gt;% 
+  summarise(generation = sum(generation_megawatthours)) %&gt;% 
+  mutate(year = year(yearmonth),
+         month = month(yearmonth)) %&gt;% 
+  mutate(type = factor(type, levels = c(&quot;COAL&quot;, &quot;OIL&quot;, &quot;GAS&quot;, &quot;BIOMASS&quot;, &quot;NUCLEAR&quot;, &quot;HYDRO&quot;, &quot;WIND&quot;, &quot;OTHER&quot;, &quot;SOLAR&quot;, &quot;TOTAL&quot;))) #Changing levels to make the color match the type later
+
+tx_ts_breakdown &lt;- tx_ts %&gt;% 
+  filter(type != &quot;TOTAL&quot;)
+
+tx_ts_total &lt;- tx_ts %&gt;% 
+  filter(type == &quot;TOTAL&quot;)</code></pre>
+</div>
+<div id="geographic-locations-for-tx-power-plants." class="section level4">
+<h4><strong>1. Geographic locations for TX power plants.</strong></h4>
+<pre class="r"><code>#Creating a TX map
+
+us_county_raw &lt;- read_sf(dsn = &quot;cb_2018_us_county_500k&quot;, layer = &quot;cb_2018_us_county_500k&quot;)
+  
+tx_map &lt;- us_county_raw  %&gt;%   
+  dplyr::filter(STATEFP == &#39;48&#39;) %&gt;%
+  select(NAME) %&gt;% 
+  st_transform(crs = 4326)
+
+#plot(tx_map)</code></pre>
+<pre class="r"><code>tx_plant_map &lt;- ggplot(tx_map)+
+  geom_sf(fill = &quot;white&quot;,
+          color = &quot;black&quot;,
+          size = 0.2)+
+  geom_sf(data = plant_tx_sf,
+          aes(fill = type,
+              color = type,
+              size = plngenan/1000), #Unit in GWh
+          alpha = 0.8)+
+  scale_size(guide = &quot;none&quot;) + #Removing size legend
+  labs(fill = &quot;Plant Type&quot;,
+       color = &quot;Plant Type&quot;)+
+  scale_fill_paletteer_d(&quot;ggsci::lanonc_lancet&quot;, direction = -1)+
+  scale_color_paletteer_d(&quot;ggsci::lanonc_lancet&quot;, direction = -1)
+
+tx_plant_map</code></pre>
+<p><img src="/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><strong>Figure 2. Geographic Locations of TX Power Plants.</strong> Each bubble on the map indicates a power plant. The color of the bubble indicates the type of the plant. The size of the bubble indicates the total generation amount of the plant in 2018. (Source: eGrid, 2018)</p>
+<ul>
+<li>Traditional large plants like coal, gas, and nuclear concentrate in the east region of the state.</li>
+<li>Small scale wind plants concentrates in the north and south region of the state.</li>
+</ul>
+</div>
+<div id="tx-generation-mix-change-from-2001-to-2018." class="section level4">
+<h4><strong>2. TX generation mix change from 2001 to 2018.</strong></h4>
+<pre class="r"><code>tx_tsibble &lt;- as_tsibble(tx_ts_breakdown, key = type, index = ym_sep) %&gt;% 
+  fill_gaps()
+
+tx_tsibble1 &lt;- tx_tsibble %&gt;% 
+  rename(&#39;Generation Type&#39; = type) #Just changing the label name
+
+tx_tsibble1 %&gt;% 
+  autoplot(generation/1000)+
+  scale_color_paletteer_d(&quot;ggsci::lanonc_lancet&quot;, direction = -1) + 
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  labs(y = &quot;Generation (GWh)&quot;, x = &quot;Year&quot;)</code></pre>
+<p><img src="/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><strong>Figure 3. TX Generation Change from 2001 to 2018 by Generation Type.</strong> The color of the line indicates the generation type. Gas, coal, wind, and nuclear contributes the most to TX electricity. (Source: US EIA, 2020)</p>
+<ul>
+<li>Gas, coal and nuclear show strong seasonality.</li>
+<li>The seasonality for wind is less obvious.</li>
+<li>Coal shows a trend of decreasing.</li>
+<li>Wind shows a trend of increasing.</li>
+</ul>
+<pre class="r"><code>total_annually &lt;- tx_ts_total %&gt;% 
+  group_by(year) %&gt;% 
+  summarise(generation = sum(generation))
+
+total_annually_breakdown &lt;- tx_ts_breakdown %&gt;% 
+  group_by(year, type) %&gt;% 
+  summarise(generation = sum(generation))
+  
+
+ggplot()+
+  geom_line(data = total_annually, 
+            aes(x = year, y = generation/1000),
+            size = 2)+
+  scale_x_continuous(breaks=seq(2001,2018,1))+
+  geom_bar(data = total_annually_breakdown, 
+           aes(x = year, y = generation/1000, fill = type), 
+           stat = &quot;identity&quot;,
+           width = 0.4,
+           alpha = 0.8)+
+  scale_fill_paletteer_d(&quot;ggsci::lanonc_lancet&quot;, direction = -1) + 
+  theme_classic()+
+  labs(y = &quot;Generation (GWh)&quot;, x = &quot;Year&quot;, fill = &quot;Generation Type&quot;) +
+  scale_y_continuous(expand = c(0, 0))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))</code></pre>
+<p><img src="/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+<p><strong>Figure 4. TX Generation Change from 2001 to 2018 in Total and in Breakdown.</strong> The black bold line indicates the total generation amount between 2001 to 2018. The color of the bar for each year indicates the mix of generation type.(Source: US EIA, 2020)</p>
+<ul>
+<li>In total, the electricity generation in TX shows an increasing trend.</li>
+</ul>
+</div>
+<div id="the-seasonal-change-of-the-generation-amount-for-four-main-generation-types." class="section level4">
+<h4><strong>3. The seasonal change of the generation amount for four main generation types.</strong></h4>
+<pre class="r"><code>tx_tsibble_major &lt;- tx_tsibble %&gt;% 
+  filter(type %in% c(&quot;GAS&quot;, &quot;COAL&quot;, &quot;NUCLEAR&quot;, &quot;WIND&quot;))
+
+#tx_tsibble_major %&gt;% 
+#  gg_season(generation, max_col = 100)+
+#  scale_color_gradientn(colors = paletteer_d(&quot;ggsci::default_gsea&quot;))
+
+ggplot(data = tx_tsibble_major, aes(x = month, y = generation/1000, group = year))+
+  geom_line(aes(color = year))+
+  facet_wrap(~type,
+             ncol = 1,
+             scale = &quot;free&quot;,
+             strip.position = &quot;right&quot;)+
+  scale_color_gradientn(colors = paletteer_d(&quot;ggsci::default_gsea&quot;)) + #manually manipulating color
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  scale_x_continuous(breaks=seq(1,12,1))+
+  labs(y = &quot;Generation (GWh)&quot;, x = &quot;Month&quot;, color = &quot;Year&quot;)</code></pre>
+<p><img src="/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p><strong>Figure 5. Season Plots for Coal, Gas, Nuclear, and Wind Generation in TX.</strong> A season plot shows the change of the generation in one year. Each line in the plot represents one year, indicated by the color scale. (Source: US EIA, 2020)</p>
+<ul>
+<li>For coal and gas, the generation pattern in one year follows the common pattern of high electricity demand in summer. As a result, the generation increases significantly during summer months to guarantee supply.</li>
+<li>However, nuclear and wind do not show such pattern, probably due to their continous generation characteristics and dependence on weather. In fact, the lack of flexibility is usually considered as a disadvantage of renewable powers.</li>
+<li>There are two significant generation drops for nuclear in October and April. This is probably due to the annual shutdown of the reactors.</li>
+<li>Similarly, the season plot indicates the decreasing of coal generation and the increasing of wind generation.</li>
+</ul>
+</div>
+<div id="reference" class="section level4">
+<h4><strong>Reference:</strong></h4>
+<ol style="list-style-type: decimal">
+<li>CBS News. (2018). A red state goes green: How Texas became a pioneer in wind energy. Available at: <a href="https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/" class="uri">https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/</a><br />
+</li>
+<li>US EPA. (2020). Emissions &amp; Generation Resource Integrated Database (eGRID). Available at: <a href="https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid" class="uri">https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid</a><br />
+</li>
+<li>US EIA. (2020). Detailed preliminary EIA-923 monthly and annual survey data (back to 1990). Available at: <a href="https://www.eia.gov/electricity/data.php#generation" class="uri">https://www.eia.gov/electricity/data.php#generation</a></li>
+</ol>
+</div>
+
+    </div>
+
+    
+
+
+
+
+
+
+
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=/project/time-series-for-tx-power/time-series-for-tx-power/&amp;text=Time%20Series%20for%20TX%20power" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=/project/time-series-for-tx-power/time-series-for-tx-power/&amp;t=Time%20Series%20for%20TX%20power" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=Time%20Series%20for%20TX%20power&amp;body=/project/time-series-for-tx-power/time-series-for-tx-power/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=/project/time-series-for-tx-power/time-series-for-tx-power/&amp;title=Time%20Series%20for%20TX%20power" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=Time%20Series%20for%20TX%20power%20/project/time-series-for-tx-power/time-series-for-tx-power/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=/project/time-series-for-tx-power/time-series-for-tx-power/&amp;title=Time%20Series%20for%20TX%20power" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  
+  <div class="media author-card content-widget-hr">
+    
+      
+      <img class="avatar mr-3 avatar-circle" src="/authors/admin/avatar_hu9904cd1a71929cf36e3c265c97cfb50d_1367161_270x270_fill_q90_lanczos_center.jpg" alt="Avatar">
+    
+
+    <div class="media-body">
+      <h5 class="card-title"><a href="/">Yingfei (Ted) Jiang</a></h5>
+      <h6 class="card-subtitle">Graduate Researcher</h6>
+      <p class="card-text">My research interest is the sustainability in energy development around the world.</p>
+      <ul class="network-icon" aria-hidden="true">
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="/#contact" >
+        <i class="fas fa-envelope"></i>
+      </a>
+    </li>
+  
+    
+    
+    
+      
+    
+    
+    
+    
+    
+      
+    
+    <li>
+      <a href="https://github.com/tedjiang" target="_blank" rel="noopener">
+        <i class="fab fa-github"></i>
+      </a>
+    </li>
+  
+</ul>
+
+    </div>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+    <div class="project-related-pages content-widget-hr">
+      
+      
+
+      
+      
+      
+
+      
+      
+      
+
+      
+      
+      
+    </div>
+  </div>
+</article>
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.c816d323c3a55093dae0829b44ea1ca8.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+  <div class="container">
+    <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    
+
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+    <span class="float-right" aria-hidden="true">
+      <a href="#" class="back-to-top">
+        <span class="button_icon">
+          <i class="fas fa-chevron-up fa-2x"></i>
+        </span>
+      </a>
+    </span>
+    
+  </p>
+</footer>
+
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

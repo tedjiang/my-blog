@@ -1,0 +1,277 @@
+---
+title: "US Coal Plants and Respiratory Conditions"
+author: "Ted (Yingfei) Jiang"
+date: "2/12/2020"
+output: html_document
+---
+
+
+
+<p>Coal power plants are notorious for their <span class="math inline">\(NO_x\)</span>, <span class="math inline">\(SO_2\)</span>, and particulate matter emissions, which could all cause respiratory conditions. This project will map the large scale coal power plants (annual generation &gt; 1000GWh) in the US, and the prevalance of three major respiratory conditions–chronic obstructive pulmonary disease (COPD), asthma, and lung and bronchus cancer– in all US states. Remember that this project will not do any regressions on the causality between coal power plants and respiratory conditions. Respiratory conditions are related to many factors such as mobile emissions, climate, geographic features, etc. Hence, it is irresponsible to use this project to make any declrations.</p>
+<div class="figure">
+<img src="superJumbo.jpg" alt="Figure 1. A Coal Power Plant in Kentucky. (Source: Luke Sharrett for The New York Times, 2016)" />
+<p class="caption"><strong>Figure 1. A Coal Power Plant in Kentucky.</strong> (Source: Luke Sharrett for The New York Times, 2016)</p>
+</div>
+<pre class="r"><code>#Create separate CRS for AK, HI, and lower states
+
+crs_lower48 &lt;- &quot;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs&quot;
+crs_ak &lt;- &quot;+proj=aea +lat_1=55 +lat_2=65 +lat_0=50 +lon_0=-154 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs &quot;
+crs_hi &lt;- &quot;+proj=aea +lat_1=8 +lat_2=18 +lat_0=13 +lon_0=-157 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs&quot;</code></pre>
+<pre class="r"><code>plant_df_raw &lt;- read_excel(&quot;egrid2018_data.xlsx&quot;, skip = 1, sheet = &quot;PLNT18&quot;)
+
+plant_df &lt;- plant_df_raw %&gt;% 
+  filter(! PSTATABB %in% c(&quot;PR&quot;, &quot;AS&quot;, &quot;VI&quot;, &quot;GU&quot;, &quot;MP&quot;)) %&gt;% 
+  clean_names() %&gt;% 
+  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&gt;% 
+  drop_na() %&gt;% 
+  filter(plfuelct != &quot;OTHF&quot;) %&gt;% 
+  filter(plngenan &gt; 1000000) %&gt;% 
+  mutate(renewable = case_when(
+    plfuelct %in% c(&quot;WIND&quot;, &quot;HYDRO&quot;, &quot;BIOMASS&quot;, &quot;SOLAR&quot;, &quot;NUCLEAR&quot;, &quot;GEOTHERMAL&quot;) ~ &quot;Renewable&quot;,
+    TRUE  ~ str_to_title(plfuelct)
+  ))
+
+plant_sf &lt;- st_as_sf(plant_df, coords = c(&quot;lon&quot;, &quot;lat&quot;), crs = 4326)</code></pre>
+<pre class="r"><code>plant_coal_sf &lt;- plant_sf %&gt;% 
+  filter(plfuelct == &quot;COAL&quot;)</code></pre>
+<pre class="r"><code>us_map_raw &lt;- read_sf(dsn = &quot;cb_2018_us_state_500k&quot;, layer = &quot;cb_2018_us_state_500k&quot;)
+  
+us_map &lt;- us_map_raw %&gt;%   
+  filter(! STUSPS %in% c(&quot;PR&quot;, &quot;AS&quot;, &quot;VI&quot;, &quot;GU&quot;, &quot;MP&quot;)) %&gt;% 
+  select(STUSPS) %&gt;% 
+  st_transform(crs = 4326)
+
+#plot(us_map)</code></pre>
+<pre class="r"><code>med_raw &lt;- read_csv(&quot;U.S._Chronic_Disease_Indicators__CDI_.csv&quot;)</code></pre>
+<pre class="r"><code>#Including data on copd, lung cancer, and asthma in the data frame
+
+#Adding COPD
+med_copd &lt;- med_raw %&gt;% 
+  filter(Topic == &quot;Chronic Obstructive Pulmonary Disease&quot;) %&gt;% 
+  filter(DataValueType == &quot;Age-adjusted Prevalence&quot;) %&gt;% 
+  filter(YearStart == 2018) %&gt;% 
+  filter(Stratification1 == &quot;Overall&quot;) %&gt;% 
+  filter(LocationAbbr != &quot;US&quot;) %&gt;% 
+  filter(Question == &quot;Prevalence of chronic obstructive pulmonary disease among adults &gt;= 18&quot;) %&gt;% 
+  filter(! LocationAbbr %in% c(&quot;PR&quot;, &quot;AS&quot;, &quot;VI&quot;, &quot;GU&quot;, &quot;MP&quot;)) %&gt;% 
+  mutate(STUSPS = LocationAbbr) %&gt;% 
+  select (STUSPS,
+          copd = DataValue)
+
+med_sf &lt;- left_join(us_map, med_copd)
+
+#Adding asthma
+med_asthma &lt;- med_raw %&gt;% 
+  filter(Topic == &quot;Asthma&quot;) %&gt;% 
+  filter(DataValueType == &quot;Age-adjusted Prevalence&quot;) %&gt;% 
+  filter(YearStart == 2018) %&gt;% 
+  filter(Stratification1 == &quot;Overall&quot;) %&gt;% 
+  filter(LocationAbbr != &quot;US&quot;) %&gt;% 
+  filter(Question == &quot;Current asthma prevalence among adults aged &gt;= 18 years&quot;) %&gt;% 
+  filter(! LocationAbbr %in% c(&quot;PR&quot;, &quot;AS&quot;, &quot;VI&quot;, &quot;GU&quot;, &quot;MP&quot;)) %&gt;% 
+  mutate(STUSPS = LocationAbbr) %&gt;% 
+  select (STUSPS,
+          asthma = DataValue)
+
+med_sf &lt;- left_join(med_sf, med_asthma) 
+
+#Adding cancer
+med_cancer &lt;- med_raw %&gt;% 
+  filter(Topic == &quot;Cancer&quot;) %&gt;% 
+  filter(Question == &quot;Cancer of the lung and bronchus, incidence&quot;) %&gt;% 
+  filter(DataValueType == &quot;Average Annual Age-adjusted Rate&quot;) %&gt;% 
+  filter(YearStart == 2012) %&gt;% 
+  filter(Stratification1 == &quot;Overall&quot;) %&gt;% 
+  filter(LocationAbbr != &quot;US&quot;) %&gt;% 
+  filter(! LocationAbbr %in% c(&quot;PR&quot;, &quot;AS&quot;, &quot;VI&quot;, &quot;GU&quot;, &quot;MP&quot;)) %&gt;% 
+  mutate(STUSPS = LocationAbbr) %&gt;% 
+  select (STUSPS,
+          cancer = DataValue)
+
+med_sf &lt;- left_join(med_sf, med_cancer)</code></pre>
+<pre class="r"><code>#Trying to move AK and HI
+
+med_main &lt;- med_sf %&gt;% 
+  filter(!STUSPS %in% c(&quot;AK&quot;, &quot;HI&quot;)) %&gt;% 
+  st_transform(crs_lower48)
+
+bb &lt;- st_bbox(med_main)
+
+med_ak &lt;- med_sf %&gt;% 
+  filter(STUSPS == &quot;AK&quot;) %&gt;% 
+  st_transform(crs_ak)
+
+med_hi &lt;- med_sf %&gt;% 
+  filter(STUSPS == &quot;HI&quot;) %&gt;% 
+  st_transform(crs_hi)</code></pre>
+<pre class="r"><code>#Same thing for power plants
+
+coal_main &lt;- plant_coal_sf %&gt;% 
+  filter(! pstatabb %in% c(&quot;AK&quot;, &quot;HI&quot;)) %&gt;% 
+  st_transform(crs_lower48)
+
+coal_ak &lt;- plant_coal_sf %&gt;% 
+  filter(pstatabb == &quot;AK&quot;) %&gt;% 
+  st_transform(crs_ak)
+
+coal_hi &lt;- plant_coal_sf %&gt;% 
+  filter(pstatabb == &quot;HI&quot;) %&gt;% 
+  st_transform(crs_hi)</code></pre>
+<pre class="r"><code>#Trying to plot (and hope it works).
+copd_main &lt;- ggplot(med_main) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = copd),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_main,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&quot;Large Scale Coal Power Plants and Prevalence of\nCOPD among adults &gt;= 18 in United States&quot;)
+
+copd_ak &lt;- ggplot(med_ak) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = copd),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_ak,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+copd_hi &lt;- ggplot(med_hi) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = copd),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_hi,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )</code></pre>
+<pre class="r"><code>#Pasting HI an AK to the lower states
+
+ggarrange(
+  copd_main,
+  ggarrange(copd_ak, copd_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)</code></pre>
+<p><img src="/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+<p><strong>Figure 2. Large Scale Coal Power Plants and Prevalence of COPD among Adults &gt;= 18 in United States.</strong> Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of COPD among adults &gt;= 18. (Source: eGrid, 2018. US CDC, 2020.)</p>
+<pre class="r"><code>asthma_main &lt;- ggplot(med_main) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = asthma),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_main,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&quot;Large Scale Coal Power Plants and Prevalence of\nAsthma among adults &gt;= 18 in United States&quot;)
+
+asthma_ak &lt;- ggplot(med_ak) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = asthma),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_ak,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+asthma_hi &lt;- ggplot(med_hi) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = asthma),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_hi,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )</code></pre>
+<pre class="r"><code>ggarrange(
+  asthma_main,
+  ggarrange(asthma_ak, asthma_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)</code></pre>
+<p><img src="/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<p><strong>Figure 3. Large Scale Coal Power Plants and Prevalence of Asthma among Adults &gt;= 18 in United States.</strong> Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of asthma among adults &gt;= 18. (Source: eGrid, 2018. US CDC, 2020.)</p>
+<pre class="r"><code>cancer_main &lt;- ggplot(med_main) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = cancer),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_main,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&quot;Large Scale Coal Power Plants and Incidence of\nLung and Bronchus Cancer in United States&quot;)
+
+cancer_ak &lt;- ggplot(med_ak) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = cancer),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_ak,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+cancer_hi &lt;- ggplot(med_hi) +
+  geom_sf(color = &quot;black&quot;, 
+          aes(fill = cancer),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&quot;dichromat::BluetoOrange.12&quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &quot;Percent (%)&quot;) +
+  geom_sf(data = coal_hi,
+          color = &quot;black&quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )</code></pre>
+<pre class="r"><code>ggarrange(
+  cancer_main,
+  ggarrange(cancer_ak, cancer_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)</code></pre>
+<p><img src="/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+<p><strong>Figure 4. Large Scale Coal Power Plants and Incidence of Lung and Bronchus Cancer in United States.</strong> Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of incidence of lung and bronchus cancer. The cancer data for NV is not statistically significant thus the missing value. (Source: eGrid, 2018. US CDC, 2020.)</p>
+<div id="reference" class="section level5">
+<h5>Reference:</h5>
+<ol style="list-style-type: decimal">
+<li>Cardwell, D., Krauss, C. (2017). Coal Country’s Power Plants Are Turning Away From Coal. New York Times. Available at: <a href="https://www.nytimes.com/2017/05/26/business/energy-environment/coal-power-renewable-energy.html" class="uri">https://www.nytimes.com/2017/05/26/business/energy-environment/coal-power-renewable-energy.html</a></li>
+<li>US EPA. (2020). Emissions &amp; Generation Resource Integrated Database (eGRID). Available at: <a href="https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid" class="uri">https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid</a></li>
+<li>US CDC. (2020). U.S. Chronic Disease Indicators (CDI). Available at: <a href="https://healthdata.gov/dataset/us-chronic-disease-indicators-cdi" class="uri">https://healthdata.gov/dataset/us-chronic-disease-indicators-cdi</a></li>
+</ol>
+</div>

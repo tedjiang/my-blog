@@ -77,240 +77,6 @@
     </item>
     
     <item>
-      <title>Writing technical content in Academic</title>
-      <link>/post/writing-technical-content/</link>
-      <pubDate>Fri, 12 Jul 2019 00:00:00 +0000</pubDate>
-      <guid>/post/writing-technical-content/</guid>
-      <description>&lt;p&gt;Academic is designed to give technical content creators a seamless experience. You can focus on the content and Academic handles the rest.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Highlight your code snippets, take notes on math classes, and draw diagrams from textual representation.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;On this page, you&#39;ll find some examples of the types of technical content that can be rendered with Academic.&lt;/p&gt;
-&lt;h2 id=&#34;examples&#34;&gt;Examples&lt;/h2&gt;
-&lt;h3 id=&#34;code&#34;&gt;Code&lt;/h3&gt;
-&lt;p&gt;Academic supports a Markdown extension for highlighting code syntax. You can enable this feature by toggling the &lt;code&gt;highlight&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file.&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```python
-import pandas as pd
-data = pd.read_csv(&amp;quot;data.csv&amp;quot;)
-data.head()
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;import pandas as pd
-data = pd.read_csv(&amp;quot;data.csv&amp;quot;)
-data.head()
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;math&#34;&gt;Math&lt;/h3&gt;
-&lt;p&gt;Academic supports a Markdown extension for $\LaTeX$ math. You can enable this feature by toggling the &lt;code&gt;math&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file.&lt;/p&gt;
-&lt;p&gt;To render &lt;em&gt;inline&lt;/em&gt; or &lt;em&gt;block&lt;/em&gt; math, wrap your LaTeX math with &lt;code&gt;$...$&lt;/code&gt; or &lt;code&gt;$$...$$&lt;/code&gt;, respectively.&lt;/p&gt;
-&lt;p&gt;Example &lt;strong&gt;math block&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-tex&#34;&gt;$$\gamma_{n} = \frac{ 
-\left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T 
-\left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}
-{\left \|\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right \|^2}$$
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;p&gt;$$\gamma_{n} = \frac{ \left | \left (\mathbf x_{n} - \mathbf x_{n-1} \right )^T \left [\nabla F (\mathbf x_{n}) - \nabla F (\mathbf x_{n-1}) \right ] \right |}{\left |\nabla F(\mathbf{x}_{n}) - \nabla F(\mathbf{x}_{n-1}) \right |^2}$$&lt;/p&gt;
-&lt;p&gt;Example &lt;strong&gt;inline math&lt;/strong&gt; &lt;code&gt;$\nabla F(\mathbf{x}_{n})$&lt;/code&gt; renders as $\nabla F(\mathbf{x}_{n})$.&lt;/p&gt;
-&lt;p&gt;Example &lt;strong&gt;multi-line math&lt;/strong&gt; using the &lt;code&gt;\\&lt;/code&gt; math linebreak:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-tex&#34;&gt;$$f(k;p_0^*) = \begin{cases} p_0^* &amp;amp; \text{if }k=1, \\
-1-p_0^* &amp;amp; \text {if }k=0.\end{cases}$$
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;p&gt;$$f(k;p_0^*) = \begin{cases} p_0^* &amp;amp; \text{if }k=1, \&lt;br&gt;
-1-p_0^* &amp;amp; \text {if }k=0.\end{cases}$$&lt;/p&gt;
-&lt;h3 id=&#34;diagrams&#34;&gt;Diagrams&lt;/h3&gt;
-&lt;p&gt;Academic supports a Markdown extension for diagrams. You can enable this feature by toggling the &lt;code&gt;diagram&lt;/code&gt; option in your &lt;code&gt;config/_default/params.toml&lt;/code&gt; file or by adding &lt;code&gt;diagram: true&lt;/code&gt; to your page front matter.&lt;/p&gt;
-&lt;p&gt;An example &lt;strong&gt;flowchart&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```mermaid
-graph TD
-A[Hard] --&amp;gt;|Text| B(Round)
-B --&amp;gt; C{Decision}
-C --&amp;gt;|One| D[Result 1]
-C --&amp;gt;|Two| E[Result 2]
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;graph TD
-A[Hard] --&amp;gt;|Text| B(Round)
-B --&amp;gt; C{Decision}
-C --&amp;gt;|One| D[Result 1]
-C --&amp;gt;|Two| E[Result 2]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;An example &lt;strong&gt;sequence diagram&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```mermaid
-sequenceDiagram
-Alice-&amp;gt;&amp;gt;John: Hello John, how are you?
-loop Healthcheck
-    John-&amp;gt;&amp;gt;John: Fight against hypochondria
-end
-Note right of John: Rational thoughts!
-John--&amp;gt;&amp;gt;Alice: Great!
-John-&amp;gt;&amp;gt;Bob: How about you?
-Bob--&amp;gt;&amp;gt;John: Jolly good!
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;sequenceDiagram
-Alice-&amp;gt;&amp;gt;John: Hello John, how are you?
-loop Healthcheck
-    John-&amp;gt;&amp;gt;John: Fight against hypochondria
-end
-Note right of John: Rational thoughts!
-John--&amp;gt;&amp;gt;Alice: Great!
-John-&amp;gt;&amp;gt;Bob: How about you?
-Bob--&amp;gt;&amp;gt;John: Jolly good!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;An example &lt;strong&gt;Gantt diagram&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```mermaid
-gantt
-section Section
-Completed :done,    des1, 2014-01-06,2014-01-08
-Active        :active,  des2, 2014-01-07, 3d
-Parallel 1   :         des3, after des1, 1d
-Parallel 2   :         des4, after des1, 1d
-Parallel 3   :         des5, after des3, 1d
-Parallel 4   :         des6, after des4, 1d
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;gantt
-section Section
-Completed :done,    des1, 2014-01-06,2014-01-08
-Active        :active,  des2, 2014-01-07, 3d
-Parallel 1   :         des3, after des1, 1d
-Parallel 2   :         des4, after des1, 1d
-Parallel 3   :         des5, after des3, 1d
-Parallel 4   :         des6, after des4, 1d
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;An example &lt;strong&gt;class diagram&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```mermaid
-classDiagram
-Class01 &amp;lt;|-- AveryLongClass : Cool
-&amp;lt;&amp;lt;interface&amp;gt;&amp;gt; Class01
-Class09 --&amp;gt; C2 : Where am i?
-Class09 --* C3
-Class09 --|&amp;gt; Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-class Class10 {
-  &amp;lt;&amp;lt;service&amp;gt;&amp;gt;
-  int id
-  size()
-}
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;classDiagram
-Class01 &amp;lt;|-- AveryLongClass : Cool
-&amp;lt;&amp;lt;interface&amp;gt;&amp;gt; Class01
-Class09 --&amp;gt; C2 : Where am i?
-Class09 --* C3
-Class09 --|&amp;gt; Class07
-Class07 : equals()
-Class07 : Object[] elementData
-Class01 : size()
-Class01 : int chimp
-Class01 : int gorilla
-class Class10 {
-  &amp;lt;&amp;lt;service&amp;gt;&amp;gt;
-  int id
-  size()
-}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;An example &lt;strong&gt;state diagram&lt;/strong&gt;:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;```mermaid
-stateDiagram
-[*] --&amp;gt; Still
-Still --&amp;gt; [*]
-Still --&amp;gt; Moving
-Moving --&amp;gt; Still
-Moving --&amp;gt; Crash
-Crash --&amp;gt; [*]
-```
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-mermaid&#34;&gt;stateDiagram
-[*] --&amp;gt; Still
-Still --&amp;gt; [*]
-Still --&amp;gt; Moving
-Moving --&amp;gt; Still
-Moving --&amp;gt; Crash
-Crash --&amp;gt; [*]
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3 id=&#34;todo-lists&#34;&gt;Todo lists&lt;/h3&gt;
-&lt;p&gt;You can even write your todo lists in Academic too:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;- [x] Write math example
-- [x] Write diagram example
-- [ ] Do something else
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;Write math example&lt;/li&gt;
-&lt;li&gt;&lt;input checked=&#34;&#34; disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;Write diagram example&lt;/li&gt;
-&lt;li&gt;&lt;input disabled=&#34;&#34; type=&#34;checkbox&#34;&gt;Do something else&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3 id=&#34;tables&#34;&gt;Tables&lt;/h3&gt;
-&lt;p&gt;Represent your data in tables:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;| First Header  | Second Header |
-| ------------- | ------------- |
-| Content Cell  | Content Cell  |
-| Content Cell  | Content Cell  |
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;table&gt;
-&lt;thead&gt;
-&lt;tr&gt;
-&lt;th&gt;First Header&lt;/th&gt;
-&lt;th&gt;Second Header&lt;/th&gt;
-&lt;/tr&gt;
-&lt;/thead&gt;
-&lt;tbody&gt;
-&lt;tr&gt;
-&lt;td&gt;Content Cell&lt;/td&gt;
-&lt;td&gt;Content Cell&lt;/td&gt;
-&lt;/tr&gt;
-&lt;tr&gt;
-&lt;td&gt;Content Cell&lt;/td&gt;
-&lt;td&gt;Content Cell&lt;/td&gt;
-&lt;/tr&gt;
-&lt;/tbody&gt;
-&lt;/table&gt;
-&lt;h3 id=&#34;asides&#34;&gt;Asides&lt;/h3&gt;
-&lt;p&gt;Academic supports a 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/#alerts&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;shortcode for asides&lt;/a&gt;, also referred to as &lt;em&gt;notices&lt;/em&gt;, &lt;em&gt;hints&lt;/em&gt;, or &lt;em&gt;alerts&lt;/em&gt;. By wrapping a paragraph in &lt;code&gt;{{% alert note %}} ... {{% /alert %}}&lt;/code&gt;, it will render as an aside.&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{% alert note %}}
-A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
-{{% /alert %}}
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;div&gt;
-    A Markdown aside is useful for displaying notices, hints, or definitions to your readers.
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;h3 id=&#34;icons&#34;&gt;Icons&lt;/h3&gt;
-&lt;p&gt;Academic enables you to use a wide range of 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/page-builder/#icons&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;icons from &lt;em&gt;Font Awesome&lt;/em&gt; and &lt;em&gt;Academicons&lt;/em&gt;&lt;/a&gt; in addition to 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/#emojis&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;emojis&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Here are some examples using the &lt;code&gt;icon&lt;/code&gt; shortcode to render icons:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-markdown&#34;&gt;{{&amp;lt; icon name=&amp;quot;terminal&amp;quot; pack=&amp;quot;fas&amp;quot; &amp;gt;}} Terminal  
-{{&amp;lt; icon name=&amp;quot;python&amp;quot; pack=&amp;quot;fab&amp;quot; &amp;gt;}} Python  
-{{&amp;lt; icon name=&amp;quot;r-project&amp;quot; pack=&amp;quot;fab&amp;quot; &amp;gt;}} R
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;renders as&lt;/p&gt;
-&lt;p&gt;
-  &lt;i class=&#34;fas fa-terminal  pr-1 fa-fw&#34;&gt;&lt;/i&gt; Terminal&lt;br&gt;
-
-  &lt;i class=&#34;fab fa-python  pr-1 fa-fw&#34;&gt;&lt;/i&gt; Python&lt;br&gt;
-
-  &lt;i class=&#34;fab fa-r-project  pr-1 fa-fw&#34;&gt;&lt;/i&gt; R&lt;/p&gt;
-&lt;h3 id=&#34;did-you-find-this-page-helpful-consider-sharing-it-&#34;&gt;Did you find this page helpful? Consider sharing it 🙌&lt;/h3&gt;
-</description>
-    </item>
-    
-    <item>
       <title>An example preprint / working paper</title>
       <link>/publication/preprint/</link>
       <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
@@ -322,55 +88,6 @@ A Markdown aside is useful for displaying notices, hints, or definitions to your
 &lt;/div&gt;
 &lt;p&gt;Supplementary notes can be added here, including 
 &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
-      <title>Display Jupyter Notebooks with Academic</title>
-      <link>/post/jupyter/</link>
-      <pubDate>Tue, 05 Feb 2019 00:00:00 +0000</pubDate>
-      <guid>/post/jupyter/</guid>
-      <description>&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;from IPython.core.display import Image
-Image(&#39;https://www.python.org/static/community_logos/python-logo-master-v3-TM-flattened.png&#39;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;./index_1_0.png&#34; alt=&#34;png&#34;&gt;&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-python&#34;&gt;print(&amp;quot;Welcome to Academic!&amp;quot;)
-&lt;/code&gt;&lt;/pre&gt;
-&lt;pre&gt;&lt;code&gt;Welcome to Academic!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;install-python-and-jupyterlab&#34;&gt;Install Python and JupyterLab&lt;/h2&gt;
-&lt;p&gt;
-&lt;a href=&#34;https://www.anaconda.com/distribution/#download-section&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Install Anaconda&lt;/a&gt; which includes Python 3 and JupyterLab.&lt;/p&gt;
-&lt;p&gt;Alternatively, install JupyterLab with &lt;code&gt;pip3 install jupyterlab&lt;/code&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;create-or-upload-a-jupyter-notebook&#34;&gt;Create or upload a Jupyter notebook&lt;/h2&gt;
-&lt;p&gt;Run the following commands in your Terminal, substituting &lt;code&gt;&amp;lt;MY-WEBSITE-FOLDER&amp;gt;&lt;/code&gt; and &lt;code&gt;&amp;lt;SHORT-POST-TITLE&amp;gt;&lt;/code&gt; with the file path to your Academic website folder and a short title for your blog post (use hyphens instead of spaces), respectively:&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;mkdir -p &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
-cd &amp;lt;MY-WEBSITE-FOLDER&amp;gt;/content/post/&amp;lt;SHORT-POST-TITLE&amp;gt;/
-jupyter lab index.ipynb
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;The &lt;code&gt;jupyter&lt;/code&gt; command above will launch the JupyterLab editor, allowing us to add Academic metadata and write the content.&lt;/p&gt;
-&lt;h2 id=&#34;edit-your-post-metadata&#34;&gt;Edit your post metadata&lt;/h2&gt;
-&lt;p&gt;The first cell of your Jupter notebook will contain your post metadata (
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/front-matter/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;front matter&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;In Jupter, choose &lt;em&gt;Markdown&lt;/em&gt; as the type of the first cell and wrap your Academic metadata in three dashes, indicating that it is YAML front matter:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;---
-title: My post&#39;s title
-date: 2019-09-01
-
-# Put any other Academic metadata here...
----
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Edit the metadata of your post, using the 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;documentation&lt;/a&gt; as a guide to the available options.&lt;/p&gt;
-&lt;p&gt;To set a 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#featured-image&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;featured image&lt;/a&gt;, place an image named &lt;code&gt;featured&lt;/code&gt; into your post&#39;s folder.&lt;/p&gt;
-&lt;p&gt;For other tips, such as using math, see the guide on 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;writing content with Academic&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;convert-notebook-to-markdown&#34;&gt;Convert notebook to Markdown&lt;/h2&gt;
-&lt;pre&gt;&lt;code class=&#34;language-bash&#34;&gt;jupyter nbconvert index.ipynb --to markdown --NbConvertApp.output_files_dir=.
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2 id=&#34;example&#34;&gt;Example&lt;/h2&gt;
-&lt;p&gt;This post was created with Jupyter. The orginal files can be found at &lt;a href=&#34;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&#34;&gt;https://github.com/gcushen/hugo-academic/tree/master/exampleSite/content/post/jupyter&lt;/a&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -526,150 +243,6 @@ Three
     </item>
     
     <item>
-      <title>Academic: the website builder for Hugo</title>
-      <link>/post/getting-started/</link>
-      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/post/getting-started/</guid>
-      <description>&lt;p&gt;&lt;strong&gt;Create a free website with Academic using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 40 &lt;em&gt;widgets&lt;/em&gt;, &lt;em&gt;themes&lt;/em&gt;, and &lt;em&gt;language packs&lt;/em&gt; included!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;
-&lt;a href=&#34;https://academic-demo.netlify.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Check out the latest &lt;strong&gt;demo&lt;/strong&gt;&lt;/a&gt; of what you&#39;ll get in less than 10 minutes, or 
-&lt;a href=&#34;https://sourcethemes.com/academic/#expo&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;view the &lt;strong&gt;showcase&lt;/strong&gt;&lt;/a&gt; of personal, project, and business sites.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;👉 
-&lt;a href=&#34;#install&#34;&gt;&lt;strong&gt;Get Started&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;📚 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;View the &lt;strong&gt;documentation&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💬 
-&lt;a href=&#34;https://discourse.gohugo.io&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Ask a question&lt;/strong&gt; on the forum&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👥 
-&lt;a href=&#34;https://spectrum.chat/academic&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Chat with the &lt;strong&gt;community&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;🐦 Twitter: 
-&lt;a href=&#34;https://twitter.com/source_themes&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;@source_themes&lt;/a&gt; 
-&lt;a href=&#34;https://twitter.com/GeorgeCushen&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;@GeorgeCushen&lt;/a&gt; 
-&lt;a href=&#34;https://twitter.com/search?q=%23MadeWithAcademic&amp;amp;src=typd&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;#MadeWithAcademic&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💡 
-&lt;a href=&#34;https://github.com/gcushen/hugo-academic/issues&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Request a &lt;strong&gt;feature&lt;/strong&gt; or report a &lt;strong&gt;bug&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;⬆️ &lt;strong&gt;Updating?&lt;/strong&gt; View the 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Update Guide&lt;/a&gt; and 
-&lt;a href=&#34;https://sourcethemes.com/academic/updates/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Release Notes&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;❤ &lt;strong&gt;Support development&lt;/strong&gt; of Academic:
-&lt;ul&gt;
-&lt;li&gt;☕️ 
-&lt;a href=&#34;https://paypal.me/cushen&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Donate a coffee&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;💵 
-&lt;a href=&#34;https://www.patreon.com/cushen&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Become a backer on &lt;strong&gt;Patreon&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;🖼️ 
-&lt;a href=&#34;https://www.redbubble.com/people/neutreno/works/34387919-academic&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Decorate your laptop or journal with an Academic &lt;strong&gt;sticker&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👕 
-&lt;a href=&#34;https://academic.threadless.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Wear the &lt;strong&gt;T-shirt&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;👩‍💻 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/contribute/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Contribute&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-&lt;figure id=&#34;figure-academic-is-mobile-first-with-a-responsive-design-to-ensure-that-your-site-looks-stunning-on-every-device&#34;&gt;
-
-
-  &lt;a data-fancybox=&#34;&#34; href=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; data-caption=&#34;Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.&#34;&gt;
-
-
-  &lt;img src=&#34;https://raw.githubusercontent.com/gcushen/hugo-academic/master/academic.png&#34; alt=&#34;&#34;  &gt;
-&lt;/a&gt;
-
-
-  
-  
-  &lt;figcaption&gt;
-    Academic is mobile first with a responsive design to ensure that your site looks stunning on every device.
-  &lt;/figcaption&gt;
-
-
-&lt;/figure&gt;
-
-&lt;p&gt;&lt;strong&gt;Key features:&lt;/strong&gt;&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Page builder&lt;/strong&gt; - Create &lt;em&gt;anything&lt;/em&gt; with 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/page-builder/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;widgets&lt;/strong&gt;&lt;/a&gt; and 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;elements&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Edit any type of content&lt;/strong&gt; - Blog posts, publications, talks, slides, projects, and more!&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Create content&lt;/strong&gt; in 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Markdown&lt;/strong&gt;&lt;/a&gt;, 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/jupyter/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;Jupyter&lt;/strong&gt;&lt;/a&gt;, or 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Plugin System&lt;/strong&gt; - Fully customizable 
-&lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;color&lt;/strong&gt; and &lt;strong&gt;font themes&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Display Code and Math&lt;/strong&gt; - Code highlighting and 
-&lt;a href=&#34;https://en.wikibooks.org/wiki/LaTeX/Mathematics&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;LaTeX math&lt;/a&gt; supported&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Integrations&lt;/strong&gt; - 
-&lt;a href=&#34;https://analytics.google.com&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Google Analytics&lt;/a&gt;, 
-&lt;a href=&#34;https://disqus.com&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Disqus commenting&lt;/a&gt;, Maps, Contact Forms, and more!&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Beautiful Site&lt;/strong&gt; - Simple and refreshing one page design&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Industry-Leading SEO&lt;/strong&gt; - Help get your website found on search engines and social media&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Media Galleries&lt;/strong&gt; - Display your images and videos with captions in a customizable gallery&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Mobile Friendly&lt;/strong&gt; - Look amazing on every screen with a mobile friendly version of your site&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Multi-language&lt;/strong&gt; - 15+ language packs including English, 中文, and Português&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Multi-user&lt;/strong&gt; - Each author gets their own profile page&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Privacy Pack&lt;/strong&gt; - Assists with GDPR&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Stand Out&lt;/strong&gt; - Bring your site to life with animation, parallax backgrounds, and scroll effects&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;One-Click Deployment&lt;/strong&gt; - No servers. No databases. Only files.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;themes&#34;&gt;Themes&lt;/h2&gt;
-&lt;p&gt;Academic comes with &lt;strong&gt;automatic day (light) and night (dark) mode&lt;/strong&gt; built-in. Alternatively, visitors can  choose their preferred mode - click the sun/moon icon in the top right of the 
-&lt;a href=&#34;https://academic-demo.netlify.com/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Demo&lt;/a&gt; to see it in action! Day/night mode can also be disabled by the site admin in &lt;code&gt;params.toml&lt;/code&gt;.&lt;/p&gt;
-&lt;p&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/themes/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Choose a stunning &lt;strong&gt;theme&lt;/strong&gt; and &lt;strong&gt;font&lt;/strong&gt;&lt;/a&gt; for your site. Themes are fully 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/customization/#custom-theme&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;customizable&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;ecosystem&#34;&gt;Ecosystem&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;
-&lt;a href=&#34;https://github.com/sourcethemes/academic-admin&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Academic Admin&lt;/a&gt;:&lt;/strong&gt; An admin tool to import publications from BibTeX or import assets for an offline site&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;
-&lt;a href=&#34;https://github.com/sourcethemes/academic-scripts&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Academic Scripts&lt;/a&gt;:&lt;/strong&gt; Scripts to help migrate content to new versions of Academic&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2 id=&#34;install&#34;&gt;Install&lt;/h2&gt;
-&lt;p&gt;You can choose from one of the following four methods to install:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-web-browser&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;strong&gt;one-click install using your web browser (recommended)&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-git&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;install on your computer using &lt;strong&gt;Git&lt;/strong&gt; with the Command Prompt/Terminal app&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-zip&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;install on your computer by downloading the &lt;strong&gt;ZIP files&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;li&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/install/#install-with-rstudio&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;install on your computer with &lt;strong&gt;RStudio&lt;/strong&gt;&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Then 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/get-started/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;personalize and deploy your new site&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;updating&#34;&gt;Updating&lt;/h2&gt;
-&lt;p&gt;
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/update/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;View the Update Guide&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Feel free to &lt;em&gt;star&lt;/em&gt; the project on 
-&lt;a href=&#34;https://github.com/gcushen/hugo-academic/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Github&lt;/a&gt; to help keep track of 
-&lt;a href=&#34;https://sourcethemes.com/academic/updates&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;updates&lt;/a&gt;.&lt;/p&gt;
-&lt;h2 id=&#34;license&#34;&gt;License&lt;/h2&gt;
-&lt;p&gt;Copyright 2016-present 
-&lt;a href=&#34;https://georgecushen.com&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;George Cushen&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Released under the 
-&lt;a href=&#34;https://github.com/gcushen/hugo-academic/blob/master/LICENSE.md&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;MIT&lt;/a&gt; license.&lt;/p&gt;
-</description>
-    </item>
-    
-    <item>
       <title>An example journal article</title>
       <link>/publication/journal-article/</link>
       <pubDate>Tue, 01 Sep 2015 00:00:00 +0000</pubDate>
@@ -690,56 +263,6 @@ Three
     </item>
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/post/2015-07-23-r-rmarkdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
-      <guid>/post/2015-07-23-r-rmarkdown/</guid>
-      <description>
-
-
-&lt;div id=&#34;r-markdown&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;R Markdown&lt;/h1&gt;
-&lt;p&gt;This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see &lt;a href=&#34;http://rmarkdown.rstudio.com&#34; class=&#34;uri&#34;&gt;http://rmarkdown.rstudio.com&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;You can embed an R code chunk like this:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;summary(cars)
-##      speed           dist       
-##  Min.   : 4.0   Min.   :  2.00  
-##  1st Qu.:12.0   1st Qu.: 26.00  
-##  Median :15.0   Median : 36.00  
-##  Mean   :15.4   Mean   : 42.98  
-##  3rd Qu.:19.0   3rd Qu.: 56.00  
-##  Max.   :25.0   Max.   :120.00
-fit &amp;lt;- lm(dist ~ speed, data = cars)
-fit
-## 
-## Call:
-## lm(formula = dist ~ speed, data = cars)
-## 
-## Coefficients:
-## (Intercept)        speed  
-##     -17.579        3.932&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;including-plots&#34; class=&#34;section level1&#34;&gt;
-&lt;h1&gt;Including Plots&lt;/h1&gt;
-&lt;p&gt;You can also embed plots. See Figure &lt;a href=&#34;#fig:pie&#34;&gt;1&lt;/a&gt; for example:&lt;/p&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;par(mar = c(0, 1, 0, 1))
-pie(
-  c(280, 60, 20),
-  c(&amp;#39;Sky&amp;#39;, &amp;#39;Sunny side of pyramid&amp;#39;, &amp;#39;Shady side of pyramid&amp;#39;),
-  col = c(&amp;#39;#0292D8&amp;#39;, &amp;#39;#F7EA39&amp;#39;, &amp;#39;#C4B632&amp;#39;),
-  init.angle = -50, border = NA
-)&lt;/code&gt;&lt;/pre&gt;
-&lt;div class=&#34;figure&#34;&gt;&lt;span id=&#34;fig:pie&#34;&gt;&lt;/span&gt;
-&lt;img src=&#34;/post/2015-07-23-r-rmarkdown_files/figure-html/pie-1.png&#34; alt=&#34;A fancy pie chart.&#34; width=&#34;672&#34; /&gt;
-&lt;p class=&#34;caption&#34;&gt;
-Figure 1: A fancy pie chart.
-&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
-    </item>
-    
-    <item>
       <title>An example conference paper</title>
       <link>/publication/conference-paper/</link>
       <pubDate>Mon, 01 Jul 2013 00:00:00 +0000</pubDate>
@@ -756,6 +279,30 @@ Figure 1: A fancy pie chart.
 &lt;/div&gt;
 &lt;p&gt;Supplementary notes can be added here, including 
 &lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;code and math&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Are You Macho Enough to be a Vegetarian?</title>
+      <link>/post/are-you-macho-enough-to-be-a-vegetarian/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/post/are-you-macho-enough-to-be-a-vegetarian/</guid>
+      <description>
+
+
+&lt;p&gt;When you stand in front of the meat freezers in a supermarket picking a nice slab of steak, do you ever think of the reason why you want to eat meat? Is it because that meat is delicious? Or is it because you think meat is good for your health? A group of psychologists’ findings will provide you with a new answer- that people sometimes consume meat to secure their gender identity.&lt;br /&gt;
+Historically, meat consumption has been connected to gender identity. You might still remember your high school history class about pre-historic societies. The white-beard harsh-looking historical teacher told you how men acted as hunters and women acted as gatherers at that time.&lt;br /&gt;
+Now this connection has been proved scientifically. Mr. Rothgerber and his co-workers at Bellarmine University, UK find that eating meat makes men feel like a “real man.” This is shown by a positive correspondence between men’s meat consumption and their self-identity of masculinity.&lt;br /&gt;
+First, Mr. Rothgerber shows us that men do like meat more than women. By studying 86 high school students, he finds that men’s meat consumption is higher than women, and there are more female vegetarians than male ones. When justifying their meat consumption, men are more unapologetic while women are not. The top three strategies for male are pro-meat, health justification and hierarchical justification. This means their main arguments are “meat is good in general,” “meat is keeping me healthy,” and “human is superior to animals.” However, for women, the top three methods are disassociating meat-eating from animal suffering, disconnecting meat from animal, and differentiating farm animals from household pets. They are avoiding the problem!&lt;br /&gt;
+Mr. Rothgerber thinks that these differences in justification strategy might be caused by the tradition that men refuse to show weakness. In stereotype gender image, men should be tough and restrained, and showing empathy on animal suffering would be considered as weak and sensitive. To prove this assumption, Mr. Rothgerber uses a widely accepted psychological tool to test the participants’ masculinity score and compares the score with their diets. The result for men is as expected: eating beef, chicken, pork, and fish all show positive relationships with masculinity, among which beef has the highest masculinity score; having a vegetarian diet shows a negative relationship with masculinity.&lt;br /&gt;
+Unfortunately, meat consumption is not very environmental-friendly. A study in 2012 found that a healthy vegetarian diet will generate 0.7 tons of carbon emission less than a regular one provided by a national guideline. With all these findings, it proves that the belief in masculinity is harming our environment.&lt;br /&gt;
+Attitude towards meat consumption is not the first time masculinity prevents men from being pro-environment. Another group at Utah State University studied the relationship between “being environmental” and “being feminine”. They found that when the name of a non-profit organization is Wilderness Rangers, they get more donations from men, compared to the name of Friends of Nature. Also, if men feel that their masculinity is secured before going to a grocery store (e.g., telling them that they “write like a man”), they are more likely to purchase environmental items during shopping.&lt;br /&gt;
+These studies are important not because they reveal the inner secrets of why some men are averse to environmental products and services, but because they provide us some guidelines for designing our green products and strategies in the future. We do not really have the time to wait for every man to find a resolution between becoming environmental-friendly and feeling masculine. Why not make pro-environment efforts more tough and rugged, so men feel less demasculinized?&lt;br /&gt;
+However, you can always ask an unapologetic meat-eater guy: “How much beef do you need to eat to feel like a man?”&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;References:&lt;/strong&gt;&lt;br /&gt;
+* Brough, Aaron R. et al. “The Green-Feminine Stereotype and Its Effect on Sustainable Consumption.” Journal of Consumer Research 43.4 (2016): 567–582. Journal of Consumer Research. Web.&lt;br /&gt;
+* Hallström, E., A. Carlsson-Kanyama, and P. Börjesson. “Environmental Impact of Dietary Change: A Systematic Review.” Journal of Cleaner Production 15 Mar. 2015: 1–11. Journal of Cleaner Production. Web.&lt;br /&gt;
+* Rothgerber, Hank. “Real Men Don’t Eat (Vegetable) Quiche: Masculinity and the Justification of Meat Consumption.” Psychology of Men and Masculinity 14.4 (2013): 363–375. Psychology of Men and Masculinity. Web.&lt;/p&gt;
 </description>
     </item>
     
@@ -2090,6 +1637,545 @@ my_biplot&lt;/code&gt;&lt;/pre&gt;
 &lt;li&gt;USDA. (2019). Food nutrient information for raw fruits and veggies from USDA (National Nutrient Database. Available at: &lt;a href=&#34;https://fdc.nal.usda.gov/index.html&#34; class=&#34;uri&#34;&gt;https://fdc.nal.usda.gov/index.html&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Time Series for TX power</title>
+      <link>/project/time-series-for-tx-power/time-series-for-tx-power/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/time-series-for-tx-power/time-series-for-tx-power/</guid>
+      <description>
+
+
+&lt;p&gt;As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years. This project will explore the geographic distribution of TX power plants in 2018, the seasonal change of generation amount for four main generation types, and the generation mix change from 2001 to 2018.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;texas-wind.jpg&#34; alt=&#34;Figure 1. A Wind Farm in TX. With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. A Wind Farm in TX.&lt;/strong&gt; With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;prepare-the-data.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;0. Prepare the data.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Filtering TX plants
+
+plant_df_raw &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;PLNT18&amp;quot;)
+
+plant_tx_df &amp;lt;- plant_df_raw %&amp;gt;% 
+  filter(PSTATABB == &amp;quot;TX&amp;quot;) %&amp;gt;% 
+  clean_names() %&amp;gt;% 
+  filter(plngenan &amp;gt;= 10000) %&amp;gt;% 
+  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&amp;gt;% 
+  drop_na() %&amp;gt;% 
+  mutate(type = case_when(
+    plfuelct %in% c(&amp;quot;OFSL&amp;quot;, &amp;quot;OTHF&amp;quot;) ~ &amp;quot;OTHER&amp;quot;,
+    TRUE  ~ plfuelct
+  )) %&amp;gt;% 
+  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;))) #Changing levels to make the color match the type later
+
+plant_tx_sf &amp;lt;- st_as_sf(plant_tx_df, coords = c(&amp;quot;lon&amp;quot;, &amp;quot;lat&amp;quot;), crs = 4326)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw1 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2001_2002_FINAL&amp;quot;)
+raw2 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2003_2004_FINAL&amp;quot;)
+raw3 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2005-2007_FINAL&amp;quot;)
+raw4 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2008-2009_FINAL&amp;quot;)
+raw5 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2012_FINAL&amp;quot;)
+raw6 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2013_FINAL&amp;quot;)
+raw7 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2014_Final&amp;quot;)
+raw8 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2015_Final&amp;quot;)
+raw9 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2016_Preliminary&amp;quot;)
+raw10 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2017_Preliminary&amp;quot;)
+raw11 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2018_Preliminary&amp;quot;)
+raw12 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2019_Preliminary&amp;quot;)
+raw13 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2010-2011_FINAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw_df &amp;lt;- bind_rows(raw1, raw2, raw3, raw4, raw5, raw6, raw7, raw8, raw9, raw10, raw11, raw12, raw13) %&amp;gt;% 
+  clean_names()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_ts &amp;lt;- raw_df %&amp;gt;% 
+  filter(state == &amp;quot;TX&amp;quot;) %&amp;gt;% 
+  filter(type_of_producer == &amp;quot;Total Electric Power Industry&amp;quot;) %&amp;gt;% 
+  filter(year != 2019) %&amp;gt;% 
+  mutate(yearmonth = str_c(as.character(year), &amp;quot;/&amp;quot;, as.character(month), &amp;quot;/&amp;quot;, &amp;quot;1&amp;quot;)) %&amp;gt;% 
+  mutate(yearmonth = ymd(yearmonth)) %&amp;gt;% 
+  mutate(ym_sep = yearmonth(yearmonth)) %&amp;gt;% 
+  mutate(type = case_when(
+    energy_source == &amp;quot;Coal&amp;quot; ~ &amp;quot;COAL&amp;quot;,
+    energy_source == &amp;quot;Petroleum&amp;quot; ~ &amp;quot;OIL&amp;quot;,
+    energy_source %in% c(&amp;quot;Natural Gas&amp;quot;, &amp;quot;Other Gases&amp;quot; ) ~ &amp;quot;GAS&amp;quot;,
+    energy_source == &amp;quot;Nuclear&amp;quot; ~ &amp;quot;NUCLEAR&amp;quot;,
+    energy_source == &amp;quot;Hydroelectric Conventional&amp;quot;  ~ &amp;quot;HYDRO&amp;quot;,
+    energy_source == &amp;quot;Wind&amp;quot; ~ &amp;quot;WIND&amp;quot;,
+    energy_source == &amp;quot;Solar Thermal and Photovoltaic&amp;quot; ~ &amp;quot;SOLAR&amp;quot;,
+    energy_source %in% c(&amp;quot;Wood and Wood Derived Fuels&amp;quot;, &amp;quot;Other Biomass&amp;quot;) ~ &amp;quot;BIOMASS&amp;quot;,
+    energy_source == &amp;quot;Other&amp;quot; ~ &amp;quot;OTHER&amp;quot;,
+    energy_source == &amp;quot;Total&amp;quot; ~ &amp;quot;TOTAL&amp;quot;
+  )) %&amp;gt;% 
+  group_by(ym_sep, yearmonth, type) %&amp;gt;% 
+  summarise(generation = sum(generation_megawatthours)) %&amp;gt;% 
+  mutate(year = year(yearmonth),
+         month = month(yearmonth)) %&amp;gt;% 
+  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;, &amp;quot;TOTAL&amp;quot;))) #Changing levels to make the color match the type later
+
+tx_ts_breakdown &amp;lt;- tx_ts %&amp;gt;% 
+  filter(type != &amp;quot;TOTAL&amp;quot;)
+
+tx_ts_total &amp;lt;- tx_ts %&amp;gt;% 
+  filter(type == &amp;quot;TOTAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;geographic-locations-for-tx-power-plants.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;1. Geographic locations for TX power plants.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Creating a TX map
+
+us_county_raw &amp;lt;- read_sf(dsn = &amp;quot;cb_2018_us_county_500k&amp;quot;, layer = &amp;quot;cb_2018_us_county_500k&amp;quot;)
+  
+tx_map &amp;lt;- us_county_raw  %&amp;gt;%   
+  dplyr::filter(STATEFP == &amp;#39;48&amp;#39;) %&amp;gt;%
+  select(NAME) %&amp;gt;% 
+  st_transform(crs = 4326)
+
+#plot(tx_map)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_plant_map &amp;lt;- ggplot(tx_map)+
+  geom_sf(fill = &amp;quot;white&amp;quot;,
+          color = &amp;quot;black&amp;quot;,
+          size = 0.2)+
+  geom_sf(data = plant_tx_sf,
+          aes(fill = type,
+              color = type,
+              size = plngenan/1000), #Unit in GWh
+          alpha = 0.8)+
+  scale_size(guide = &amp;quot;none&amp;quot;) + #Removing size legend
+  labs(fill = &amp;quot;Plant Type&amp;quot;,
+       color = &amp;quot;Plant Type&amp;quot;)+
+  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)+
+  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)
+
+tx_plant_map&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 2. Geographic Locations of TX Power Plants.&lt;/strong&gt; Each bubble on the map indicates a power plant. The color of the bubble indicates the type of the plant. The size of the bubble indicates the total generation amount of the plant in 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Traditional large plants like coal, gas, and nuclear concentrate in the east region of the state.&lt;/li&gt;
+&lt;li&gt;Small scale wind plants concentrates in the north and south region of the state.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tx-generation-mix-change-from-2001-to-2018.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;2. TX generation mix change from 2001 to 2018.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble &amp;lt;- as_tsibble(tx_ts_breakdown, key = type, index = ym_sep) %&amp;gt;% 
+  fill_gaps()
+
+tx_tsibble1 &amp;lt;- tx_tsibble %&amp;gt;% 
+  rename(&amp;#39;Generation Type&amp;#39; = type) #Just changing the label name
+
+tx_tsibble1 %&amp;gt;% 
+  autoplot(generation/1000)+
+  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 3. TX Generation Change from 2001 to 2018 by Generation Type.&lt;/strong&gt; The color of the line indicates the generation type. Gas, coal, wind, and nuclear contributes the most to TX electricity. (Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gas, coal and nuclear show strong seasonality.&lt;/li&gt;
+&lt;li&gt;The seasonality for wind is less obvious.&lt;/li&gt;
+&lt;li&gt;Coal shows a trend of decreasing.&lt;/li&gt;
+&lt;li&gt;Wind shows a trend of increasing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;total_annually &amp;lt;- tx_ts_total %&amp;gt;% 
+  group_by(year) %&amp;gt;% 
+  summarise(generation = sum(generation))
+
+total_annually_breakdown &amp;lt;- tx_ts_breakdown %&amp;gt;% 
+  group_by(year, type) %&amp;gt;% 
+  summarise(generation = sum(generation))
+  
+
+ggplot()+
+  geom_line(data = total_annually, 
+            aes(x = year, y = generation/1000),
+            size = 2)+
+  scale_x_continuous(breaks=seq(2001,2018,1))+
+  geom_bar(data = total_annually_breakdown, 
+           aes(x = year, y = generation/1000, fill = type), 
+           stat = &amp;quot;identity&amp;quot;,
+           width = 0.4,
+           alpha = 0.8)+
+  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
+  theme_classic()+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;, fill = &amp;quot;Generation Type&amp;quot;) +
+  scale_y_continuous(expand = c(0, 0))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 4. TX Generation Change from 2001 to 2018 in Total and in Breakdown.&lt;/strong&gt; The black bold line indicates the total generation amount between 2001 to 2018. The color of the bar for each year indicates the mix of generation type.(Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In total, the electricity generation in TX shows an increasing trend.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;the-seasonal-change-of-the-generation-amount-for-four-main-generation-types.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;3. The seasonal change of the generation amount for four main generation types.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble_major &amp;lt;- tx_tsibble %&amp;gt;% 
+  filter(type %in% c(&amp;quot;GAS&amp;quot;, &amp;quot;COAL&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;WIND&amp;quot;))
+
+#tx_tsibble_major %&amp;gt;% 
+#  gg_season(generation, max_col = 100)+
+#  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;))
+
+ggplot(data = tx_tsibble_major, aes(x = month, y = generation/1000, group = year))+
+  geom_line(aes(color = year))+
+  facet_wrap(~type,
+             ncol = 1,
+             scale = &amp;quot;free&amp;quot;,
+             strip.position = &amp;quot;right&amp;quot;)+
+  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;)) + #manually manipulating color
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  scale_x_continuous(breaks=seq(1,12,1))+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Month&amp;quot;, color = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 5. Season Plots for Coal, Gas, Nuclear, and Wind Generation in TX.&lt;/strong&gt; A season plot shows the change of the generation in one year. Each line in the plot represents one year, indicated by the color scale. (Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For coal and gas, the generation pattern in one year follows the common pattern of high electricity demand in summer. As a result, the generation increases significantly during summer months to guarantee supply.&lt;/li&gt;
+&lt;li&gt;However, nuclear and wind do not show such pattern, probably due to their continous generation characteristics and dependence on weather. In fact, the lack of flexibility is usually considered as a disadvantage of renewable powers.&lt;/li&gt;
+&lt;li&gt;There are two significant generation drops for nuclear in October and April. This is probably due to the annual shutdown of the reactors.&lt;/li&gt;
+&lt;li&gt;Similarly, the season plot indicates the decreasing of coal generation and the increasing of wind generation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reference&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;Reference:&lt;/strong&gt;&lt;/h4&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;CBS News. (2018). A red state goes green: How Texas became a pioneer in wind energy. Available at: &lt;a href=&#34;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&#34; class=&#34;uri&#34;&gt;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;US EPA. (2020). Emissions &amp;amp; Generation Resource Integrated Database (eGRID). Available at: &lt;a href=&#34;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;US EIA. (2020). Detailed preliminary EIA-923 monthly and annual survey data (back to 1990). Available at: &lt;a href=&#34;https://www.eia.gov/electricity/data.php#generation&#34; class=&#34;uri&#34;&gt;https://www.eia.gov/electricity/data.php#generation&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>US Coal Plants and Respiratory Conditions</title>
+      <link>/project/us-coal-plants-and-respiratory-conditions/esm244_hw2_task3_tedjiang/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/us-coal-plants-and-respiratory-conditions/esm244_hw2_task3_tedjiang/</guid>
+      <description>
+
+
+&lt;p&gt;Coal power plants are notorious for their &lt;span class=&#34;math inline&#34;&gt;\(NO_x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(SO_2\)&lt;/span&gt;, and particulate matter emissions, which could all cause respiratory conditions. This project will map the large scale coal power plants (annual generation &amp;gt; 1000GWh) in the US, and the prevalance of three major respiratory conditions–chronic obstructive pulmonary disease (COPD), asthma, and lung and bronchus cancer– in all US states. Remember that this project will not do any regressions on the causality between coal power plants and respiratory conditions. Respiratory conditions are related to many factors such as mobile emissions, climate, geographic features, etc. Hence, it is irresponsible to use this project to make any declrations.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;superJumbo.jpg&#34; alt=&#34;Figure 1. A Coal Power Plant in Kentucky. (Source: Luke Sharrett for The New York Times, 2016)&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. A Coal Power Plant in Kentucky.&lt;/strong&gt; (Source: Luke Sharrett for The New York Times, 2016)&lt;/p&gt;
+&lt;/div&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Create separate CRS for AK, HI, and lower states
+
+crs_lower48 &amp;lt;- &amp;quot;+proj=aea +lat_1=29.5 +lat_2=45.5 +lat_0=37.5 +lon_0=-96 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs&amp;quot;
+crs_ak &amp;lt;- &amp;quot;+proj=aea +lat_1=55 +lat_2=65 +lat_0=50 +lon_0=-154 +x_0=0 +y_0=0 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs &amp;quot;
+crs_hi &amp;lt;- &amp;quot;+proj=aea +lat_1=8 +lat_2=18 +lat_0=13 +lon_0=-157 +x_0=0 +y_0=0 +ellps=GRS80 +datum=NAD83 +units=m +no_defs&amp;quot;&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plant_df_raw &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;PLNT18&amp;quot;)
+
+plant_df &amp;lt;- plant_df_raw %&amp;gt;% 
+  filter(! PSTATABB %in% c(&amp;quot;PR&amp;quot;, &amp;quot;AS&amp;quot;, &amp;quot;VI&amp;quot;, &amp;quot;GU&amp;quot;, &amp;quot;MP&amp;quot;)) %&amp;gt;% 
+  clean_names() %&amp;gt;% 
+  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&amp;gt;% 
+  drop_na() %&amp;gt;% 
+  filter(plfuelct != &amp;quot;OTHF&amp;quot;) %&amp;gt;% 
+  filter(plngenan &amp;gt; 1000000) %&amp;gt;% 
+  mutate(renewable = case_when(
+    plfuelct %in% c(&amp;quot;WIND&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;SOLAR&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;GEOTHERMAL&amp;quot;) ~ &amp;quot;Renewable&amp;quot;,
+    TRUE  ~ str_to_title(plfuelct)
+  ))
+
+plant_sf &amp;lt;- st_as_sf(plant_df, coords = c(&amp;quot;lon&amp;quot;, &amp;quot;lat&amp;quot;), crs = 4326)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;plant_coal_sf &amp;lt;- plant_sf %&amp;gt;% 
+  filter(plfuelct == &amp;quot;COAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;us_map_raw &amp;lt;- read_sf(dsn = &amp;quot;cb_2018_us_state_500k&amp;quot;, layer = &amp;quot;cb_2018_us_state_500k&amp;quot;)
+  
+us_map &amp;lt;- us_map_raw %&amp;gt;%   
+  filter(! STUSPS %in% c(&amp;quot;PR&amp;quot;, &amp;quot;AS&amp;quot;, &amp;quot;VI&amp;quot;, &amp;quot;GU&amp;quot;, &amp;quot;MP&amp;quot;)) %&amp;gt;% 
+  select(STUSPS) %&amp;gt;% 
+  st_transform(crs = 4326)
+
+#plot(us_map)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;med_raw &amp;lt;- read_csv(&amp;quot;U.S._Chronic_Disease_Indicators__CDI_.csv&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Including data on copd, lung cancer, and asthma in the data frame
+
+#Adding COPD
+med_copd &amp;lt;- med_raw %&amp;gt;% 
+  filter(Topic == &amp;quot;Chronic Obstructive Pulmonary Disease&amp;quot;) %&amp;gt;% 
+  filter(DataValueType == &amp;quot;Age-adjusted Prevalence&amp;quot;) %&amp;gt;% 
+  filter(YearStart == 2018) %&amp;gt;% 
+  filter(Stratification1 == &amp;quot;Overall&amp;quot;) %&amp;gt;% 
+  filter(LocationAbbr != &amp;quot;US&amp;quot;) %&amp;gt;% 
+  filter(Question == &amp;quot;Prevalence of chronic obstructive pulmonary disease among adults &amp;gt;= 18&amp;quot;) %&amp;gt;% 
+  filter(! LocationAbbr %in% c(&amp;quot;PR&amp;quot;, &amp;quot;AS&amp;quot;, &amp;quot;VI&amp;quot;, &amp;quot;GU&amp;quot;, &amp;quot;MP&amp;quot;)) %&amp;gt;% 
+  mutate(STUSPS = LocationAbbr) %&amp;gt;% 
+  select (STUSPS,
+          copd = DataValue)
+
+med_sf &amp;lt;- left_join(us_map, med_copd)
+
+#Adding asthma
+med_asthma &amp;lt;- med_raw %&amp;gt;% 
+  filter(Topic == &amp;quot;Asthma&amp;quot;) %&amp;gt;% 
+  filter(DataValueType == &amp;quot;Age-adjusted Prevalence&amp;quot;) %&amp;gt;% 
+  filter(YearStart == 2018) %&amp;gt;% 
+  filter(Stratification1 == &amp;quot;Overall&amp;quot;) %&amp;gt;% 
+  filter(LocationAbbr != &amp;quot;US&amp;quot;) %&amp;gt;% 
+  filter(Question == &amp;quot;Current asthma prevalence among adults aged &amp;gt;= 18 years&amp;quot;) %&amp;gt;% 
+  filter(! LocationAbbr %in% c(&amp;quot;PR&amp;quot;, &amp;quot;AS&amp;quot;, &amp;quot;VI&amp;quot;, &amp;quot;GU&amp;quot;, &amp;quot;MP&amp;quot;)) %&amp;gt;% 
+  mutate(STUSPS = LocationAbbr) %&amp;gt;% 
+  select (STUSPS,
+          asthma = DataValue)
+
+med_sf &amp;lt;- left_join(med_sf, med_asthma) 
+
+#Adding cancer
+med_cancer &amp;lt;- med_raw %&amp;gt;% 
+  filter(Topic == &amp;quot;Cancer&amp;quot;) %&amp;gt;% 
+  filter(Question == &amp;quot;Cancer of the lung and bronchus, incidence&amp;quot;) %&amp;gt;% 
+  filter(DataValueType == &amp;quot;Average Annual Age-adjusted Rate&amp;quot;) %&amp;gt;% 
+  filter(YearStart == 2012) %&amp;gt;% 
+  filter(Stratification1 == &amp;quot;Overall&amp;quot;) %&amp;gt;% 
+  filter(LocationAbbr != &amp;quot;US&amp;quot;) %&amp;gt;% 
+  filter(! LocationAbbr %in% c(&amp;quot;PR&amp;quot;, &amp;quot;AS&amp;quot;, &amp;quot;VI&amp;quot;, &amp;quot;GU&amp;quot;, &amp;quot;MP&amp;quot;)) %&amp;gt;% 
+  mutate(STUSPS = LocationAbbr) %&amp;gt;% 
+  select (STUSPS,
+          cancer = DataValue)
+
+med_sf &amp;lt;- left_join(med_sf, med_cancer)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Trying to move AK and HI
+
+med_main &amp;lt;- med_sf %&amp;gt;% 
+  filter(!STUSPS %in% c(&amp;quot;AK&amp;quot;, &amp;quot;HI&amp;quot;)) %&amp;gt;% 
+  st_transform(crs_lower48)
+
+bb &amp;lt;- st_bbox(med_main)
+
+med_ak &amp;lt;- med_sf %&amp;gt;% 
+  filter(STUSPS == &amp;quot;AK&amp;quot;) %&amp;gt;% 
+  st_transform(crs_ak)
+
+med_hi &amp;lt;- med_sf %&amp;gt;% 
+  filter(STUSPS == &amp;quot;HI&amp;quot;) %&amp;gt;% 
+  st_transform(crs_hi)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Same thing for power plants
+
+coal_main &amp;lt;- plant_coal_sf %&amp;gt;% 
+  filter(! pstatabb %in% c(&amp;quot;AK&amp;quot;, &amp;quot;HI&amp;quot;)) %&amp;gt;% 
+  st_transform(crs_lower48)
+
+coal_ak &amp;lt;- plant_coal_sf %&amp;gt;% 
+  filter(pstatabb == &amp;quot;AK&amp;quot;) %&amp;gt;% 
+  st_transform(crs_ak)
+
+coal_hi &amp;lt;- plant_coal_sf %&amp;gt;% 
+  filter(pstatabb == &amp;quot;HI&amp;quot;) %&amp;gt;% 
+  st_transform(crs_hi)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Trying to plot (and hope it works).
+copd_main &amp;lt;- ggplot(med_main) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = copd),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_main,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&amp;quot;Large Scale Coal Power Plants and Prevalence of\nCOPD among adults &amp;gt;= 18 in United States&amp;quot;)
+
+copd_ak &amp;lt;- ggplot(med_ak) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = copd),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_ak,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+copd_hi &amp;lt;- ggplot(med_hi) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = copd),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(3, 14)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_hi,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Pasting HI an AK to the lower states
+
+ggarrange(
+  copd_main,
+  ggarrange(copd_ak, copd_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 2. Large Scale Coal Power Plants and Prevalence of COPD among Adults &amp;gt;= 18 in United States.&lt;/strong&gt; Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of COPD among adults &amp;gt;= 18. (Source: eGrid, 2018. US CDC, 2020.)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;asthma_main &amp;lt;- ggplot(med_main) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = asthma),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_main,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&amp;quot;Large Scale Coal Power Plants and Prevalence of\nAsthma among adults &amp;gt;= 18 in United States&amp;quot;)
+
+asthma_ak &amp;lt;- ggplot(med_ak) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = asthma),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_ak,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+asthma_hi &amp;lt;- ggplot(med_hi) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = asthma),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(7, 13)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_hi,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggarrange(
+  asthma_main,
+  ggarrange(asthma_ak, asthma_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 3. Large Scale Coal Power Plants and Prevalence of Asthma among Adults &amp;gt;= 18 in United States.&lt;/strong&gt; Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of asthma among adults &amp;gt;= 18. (Source: eGrid, 2018. US CDC, 2020.)&lt;/p&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;cancer_main &amp;lt;- ggplot(med_main) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = cancer),
+          size = 0.2) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_main,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )+
+  ggtitle(&amp;quot;Large Scale Coal Power Plants and Incidence of\nLung and Bronchus Cancer in United States&amp;quot;)
+
+cancer_ak &amp;lt;- ggplot(med_ak) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = cancer),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_ak,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )
+
+cancer_hi &amp;lt;- ggplot(med_hi) +
+  geom_sf(color = &amp;quot;black&amp;quot;, 
+          aes(fill = cancer),
+          size = 0.2,
+          show.legend = FALSE) +
+  scale_fill_gradientn(colors = paletteer_d(&amp;quot;dichromat::BluetoOrange.12&amp;quot;),
+                       limits = c(25, 95)) +
+  labs(fill = &amp;quot;Percent (%)&amp;quot;) +
+  geom_sf(data = coal_hi,
+          color = &amp;quot;black&amp;quot;,
+          alpha = 0.8,
+          show.legend = FALSE
+          )&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;ggarrange(
+  cancer_main,
+  ggarrange(cancer_ak, cancer_hi),
+  nrow = 2,
+  heights = c(1, 0.5)
+)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/US-Coal-Plants-and-Respiratory-Conditions/ESM244_HW2_Task3_TedJiang_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 4. Large Scale Coal Power Plants and Incidence of Lung and Bronchus Cancer in United States.&lt;/strong&gt; Each point on the map represents a large scale coal power plant. The color of the state indicates the prevalence of incidence of lung and bronchus cancer. The cancer data for NV is not statistically significant thus the missing value. (Source: eGrid, 2018. US CDC, 2020.)&lt;/p&gt;
+&lt;div id=&#34;reference&#34; class=&#34;section level5&#34;&gt;
+&lt;h5&gt;Reference:&lt;/h5&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;Cardwell, D., Krauss, C. (2017). Coal Country’s Power Plants Are Turning Away From Coal. New York Times. Available at: &lt;a href=&#34;https://www.nytimes.com/2017/05/26/business/energy-environment/coal-power-renewable-energy.html&#34; class=&#34;uri&#34;&gt;https://www.nytimes.com/2017/05/26/business/energy-environment/coal-power-renewable-energy.html&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;US EPA. (2020). Emissions &amp;amp; Generation Resource Integrated Database (eGRID). Available at: &lt;a href=&#34;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;US CDC. (2020). U.S. Chronic Disease Indicators (CDI). Available at: &lt;a href=&#34;https://healthdata.gov/dataset/us-chronic-disease-indicators-cdi&#34; class=&#34;uri&#34;&gt;https://healthdata.gov/dataset/us-chronic-disease-indicators-cdi&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>“A Bigger Fluctuation” -- Climate Policy after Trump’s Paris Withdrawal Declaration</title>
+      <link>/post/climate-policy-after-trumps-paris-withdrawal-declaration/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/post/climate-policy-after-trumps-paris-withdrawal-declaration/</guid>
+      <description>
+
+
+&lt;p&gt;On June 1st, 2017, President Trump declared that the United States would withdraw from the Paris Agreement. This declaration has created a lot of concerns that U.S. policy will fail to address climate change and support energy transition in the future. This essay will introduce an equilibrium-and-fluctuation model of American politics and use this model to analyze the climate policy change in recent decades. Finally, this essay will argue that the declaration will actually promote climate policy development, considering the bipartisan characteristics of American politics, policy diffusion under federalism, and the agenda-setting process through media coverage and public opinion.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Equilibrium and fluctuation model of the U.S. bipartisan political system&lt;/strong&gt;&lt;br /&gt;
+Major policy change usually happens slowly in America with its fundamental rule-making institution and bipartisan nature. In the legislative branch, it is required that the majority of Congress need to vote to pass certain legislation, which introduces multiple veto players such as House median voter, Senate median voter, and Senate filibuster. These players create a gridlock where policy cannot be moved. At the time when one party controls both the House and the Senate, some policies may be able to move to one direction due to the shrunk gridlock, but these policies will usually go back to the mid when the other party gains control again. In the executive branch, the President can break the gridlock and make changes by issuing executive orders. However, future presidents can also easily reverse these changes via the same process. Similarly, in the legislative branch, the legal decision of the Supreme Court seldom inclines to one party, since both sides of Congress will avoid such a situation.&lt;/p&gt;
+&lt;p&gt;Hence, policies in the U.S. usually fluctuates around an equilibrium state through negative feedback. Whenever one party moves a policy to one side, the other party will soon move it back to the equilibrium. Baumgartner F. R. and Jones B. D. (1993, p.15) argue that the equilibrium is stable if the institutions of rule-making do not change and the definition of a certain issue under such institutions does not change. Rule-making institution change requires a fundamental political structure change, which is unlikely to happen in developed countries. Therefore, a definition change of a certain issue would be the common reason for major policy shifts.&lt;/p&gt;
+&lt;p&gt;The mechanism of such a policy shift is “a bigger fluctuation.” In system science, an equilibrium system tends to stay in the status quo with any minor perturbations. However, when the perturbation is big enough, the old negative feedback would turn to positive feedback, creating an avalanche effect and pushing the system to a new equilibrium. In my opinion, a similar mechanism also works in political science. A definition change would create multiple institution changes. While the results of these institutions changes create benefits for the majority of the stakeholders, they will further consolidate the institutional changes, thus creating positive feedback. An example the supports this model is the historical change of renewable energy policy in Germany and the U.S. Laird F. N. and Stefes C. (2009) compared the renewable energy policy in the two countries. They argued that in Germany, with the high cost of coal mining and intensive public concern of the Chernobyl nuclear disaster, the two major competitors of renewable power lost their supports in the late 1980s. This created a window for policymakers in Germany to intensively promote renewable power by introducing feed-in tariff (FIT) policy– a governmental subsidy on the renewable energy industry. FIT significantly accelerated the development of German renewable industry. This industrial growth pushed public opinion more favorable to renewables, making conservative parties reluctant to reverse the policy.&lt;/p&gt;
+&lt;p&gt;On the other hand, policymakers in the U.S. lacked the motivation to push renewables. First, the coal industry in the U.S. was still at its prime time in the late 1980s (EIA, 2012). Second, Mideastern oil crisis did create some anxiety, but the Bush Administration put more efforts in promoting fossil fuel rather than renewables. With the oil price decreased after several years, the window for American renewable policy change closed.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Massachusetts v. EPA, and the Obama Administration’s climate policy&lt;/strong&gt;&lt;br /&gt;
+Joining the Paris Agreement is a crucial part of the Obama Administration’s climate policy. This section will discuss the Obama Administration’s climate policy after the 2007 Massachusetts v. EPA supreme court case and analyze how they fit into the model discussed above.&lt;/p&gt;
+&lt;p&gt;The Massachusetts v. EPA case is a typical example of the definition change of a specific issue under existing institutions, thus opening a window for major policy shifts. In 2007, the State of Massachusetts argued that greenhouse gases should be qualified as air pollutants and regulated by the EPA under the Clean Air Act. The State filed a lawsuit against the EPA, and this case went all the way to the Supreme Court, which finally decided that the EPA has the responsibility to regulate greenhouse gases (Massachusetts v. EPA, 2007).&lt;/p&gt;
+&lt;p&gt;The case then became the Obama Administration’s reference to push aggressive climate policies. Joining the Paris Agreement and the Clean Power Plan (CPP) are two major achievements among these policies. However, both of them were implemented via executive power of the President. This means that they did not get approval from the Congress and can be easily reversed by new executive orders from the following presidents, which is exactly what is happening in the current Trump Administration. Hence, the Paris Agreement and the CPP are still fluctuations around the equilibrium.&lt;/p&gt;
+&lt;p&gt;However, there are some fundamental differences in these fluctuations. First of all, the fluctuations are bigger. This is shown by an unusual dysfunction of federalism which leads to sharper conflicts between the two parties. Konisky D. M. and Woods N. D. (2016) noticed the more frequent governmental overreach of the Obama Administration. It is estimated that about fifty federal environmental regulation plans were issued to the state level, far more than the Bush Administration and the Clinton Administration. At the same time, conservative states showed more protests against the federal environmental regulations. Multiple litigations against the Obama EPA were filed, arguing that it did not follow its regulation-setting role. Another example is the trend of leaving regional cap and trade program in some states with Republican governors. In 2011, former Republican New Jersey Governor Chris Christie declared that New Jersey would leave the Regional Greenhouse Gas Initiative (RGGI)—a voluntary inter-state cap and trade program in the New England region (RGGI, inc., 2011). Interestingly, with the newly elected Democratic Governor Phil Murray, New Jersey now plans to rejoin the RGGI (NJ DEP, 2018).&lt;/p&gt;
+&lt;p&gt;Second, plans like the CPP is required by existing institutions. With the Massachusetts v. EPA case, if the Trump Administration wants to reverse the CPP, they must propose a substitution plan. In 2018, EPA proposed the Affordable Clean Energy (ACE) rule. ACE emphasizes more on heat-rate efficiency improvement and gives the states more flexibility to develop their own plans (US EPA, 2018). However, with intensive questions on if the ACE could reduce greenhouse gas emission, there will possibly be more evaluations and even litigations on it. This shows that with an institutional definition change, attempts to reverse climate policy are harder than before.&lt;/p&gt;
+&lt;p&gt;Hence, as observed above, although the climate policy changes in the Obama Administration still fall into the fluctuation around the equilibrium, they also display a set of unstable characteristics. According to the equilibrium and fluctuation model discussed in the previous section, the unstable features could be a sign that the climate policy equilibrium is starting to shift.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;“A Bigger Fluctuation,” and the Trump Administration’s Climate Policy&lt;/strong&gt;&lt;br /&gt;
+With the context set, there is a now different perspective to view President Trump declaration of leaving the Paris Agreement. By using the model, this section will discuss how the declaration turns out to push more stringent and innovative climate policies mostly in the state level and what is the mechanism behind this process.&lt;/p&gt;
+&lt;p&gt;The declaration itself is just another normal fluctuation around the equilibrium, but its media influence is far bigger than normal. The global media coverage on climate change in June 2017 when the declaration happened went up about 46% compared to May 2017, while in North America, media coverage is twice the amount of May 2017 (Boykoff et al., 2017). Intensive media coverage of this spotlight incident brought climate change to the public’s attention again.&lt;/p&gt;
+&lt;p&gt;Furthermore, despite the negative attitude towards climate change of the incident, public opinions seem still in favor of climate policy. McGarth L. F. and Bernauer T.’s (2017) research indicates that climate policy has high support rates in the U.S., and this support rate is insensitive to the underlying cost and possible free-riding problem. Tingley D. and Tomz M.’s (2014) work shows similar results, arguing that the majority of the public thinks that their country should have unconditional commitments to solving climate change. Hence, with the vast media coverage and the supportive public opinion, it is predictable that climate policy will be brought on the agenda more frequently, thus creating more possibility for new climate policies. In the federal level, due to the gridlock in Congress, such policies might still be hard to be passed, but in the state level, new climate policies will be more promising. An example of this is the new renewable portfolio standard (NPS) for California. On September 10th , 2018, Californian Democratic Governor Jerry Brown issued an executive order, promising the state will be 100 percent clean energy by 2045 (CA Exe. Order, 2018). Also, there has been an on-going discussion in the Oregon legislative branch, trying to pass the Clean Energy Jobs Bill. If passed, the law will introduce a cap and trade program to Oregon (OR Legis. Assemb., 2019). In the federal level, new policies are also emerging. On February 7th , 2019, Rep. Ocasio-Cortez released the outline of a new policy proposal— “Green New Deal.” The package includes climate resiliency, infrastructure upgrade, renewable energy transition, and increasing energy efficiency, etc. (H.R. Con., 2019)&lt;/p&gt;
+&lt;p&gt;However, these new policies are more stringent and innovative than usual, showing a “bigger fluctuation” characteristic. The new NPS in California is ambitious in terms of achieving 100 percent renewable energy in such a short term. The “Green New Deal” combines climate policy and economy policy in one package, looking for supports from both parties. Policymakers supporting climate policy are now thinking out of the box.&lt;/p&gt;
+&lt;p&gt;On the other hand, conservative policymakers are confined by the revised Clean Air Act. The review of the ACE is still under process, so the only thing they can do is to wait and to prepare for possible turn-down of the ACE. The space they can move around in terms of climate policy is very limited right now.&lt;/p&gt;
+&lt;p&gt;Hence, while two parties are still combating in the climate policy arena, Democrats have more potential to introduce new policies especially in the state level, thus breaking the old equilibrium.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Predictions on the Future Climate Policy Change&lt;/strong&gt;&lt;br /&gt;
+Finally, it is important to understand how these new emerging policies could lead to a federal level climate policy shift. This section will discuss a possible mechanism of policy diffusion among states, and how this diffusion could ultimately lead to federal policy change.&lt;/p&gt;
+&lt;p&gt;Politicians typically vote based on three factors– party, ideology, and constituency. With the polarization between two parties right now, votes from conservative Republicans in any states will be hard to get. However, in the swing states, the polarization should be less severe than usual, meaning that there will be more moderates Republicans and Democrats legislators. These legislators do not weigh the Party factor too much, and their ideology tends to be more mixed. Hence, constituency will be a more important consideration for them when voting for a certain policy. If the liberal states which are adopting new climate policies can show robust economic growth in the long term, public opinion in the swing states could also incline to support such policies. For example, in the states where coal jobs are degrading, policy-induced renewable job growth in another state may incentivize local workers to ask for similar policies, thus shifting the constituency. For electoral consideration, the moderate voters in the state will start to support similar policies in the state legislative branch.&lt;/p&gt;
+&lt;p&gt;At this point, a positive feedback has already started. With swing states getting on board with climate policies, conservative states could start to change too, ultimately influencing Congress legislation and shifting federal level climate policies. Similar policy diffusion appeared frequently in the past. For example, historical Californian regulations on motor vehicle emissions turned out to affect federal regulation design (Konisky, D. M., &amp;amp; Woods, N. D., 2016). Also, this might explain the failure of American Clean Energy and Security Act (ACES). Voted in 2009, the Act never passed the filibuster veto in the Senate. ACES came out only three years after the Assembly Bill 32 (AB32) in California. Without enough time to display AB32’s effect on the economy, voters from the other states could be more hesitant when making decisions.&lt;/p&gt;
+&lt;p&gt;In summary, President Trump’s declaration of withdrawing from the Paris Agreement could potentially accelerate federal level climate policy change. First of all, the media effects it induced keep the climate policy on the agenda. The resistance it created intensified the climate policy fluctuations which have grown stronger since the Obama Administration. Secondly, while Democratic states are getting more stringent and innovative in climate policy design, Republican states are confined by the revised Clean Air Act. Finally, the successful implementation of climate policy in some states could diffuse to other states, creating a positive feedback. This positive feedback could ultimately urge a federal level climate policy change, shifting the equilibrium.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Reference:&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Baumgartner, F. R., &amp;amp; Jones, B. D. (1993). Agendas and instability in American politics. Chicago, IL: The University of Chicago Press.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Boykoff, M., Andrews, K., Luedecke, G., McNatt, M., &amp;amp; Daly, M. (2017). Media and Climate Change Observatory Monthly Summary - Issue 7, July 2017. Media and Climate Change Observatory Monthly Summaries. Retrieved from: &lt;a href=&#34;https://scholar.colorado.edu/mecco_summaries&#34; class=&#34;uri&#34;&gt;https://scholar.colorado.edu/mecco_summaries&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;CA Exe. Order B-55-18. (2018). Retrieved from: &lt;a href=&#34;https://www.gov.ca.gov/wpcontent/uploads/2018/09/9.10.18-Executive-Order.pdf&#34; class=&#34;uri&#34;&gt;https://www.gov.ca.gov/wpcontent/uploads/2018/09/9.10.18-Executive-Order.pdf&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Energy Information Administration (EIA). (2012). Annual Energy Review 2011. Retrieved from: &lt;a href=&#34;https://www.eia.gov/totalenergy/data/annual/pdf/aer.pdf&#34; class=&#34;uri&#34;&gt;https://www.eia.gov/totalenergy/data/annual/pdf/aer.pdf&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;H.R. Con. Res. 109. (2019). Retrieved from: &lt;a href=&#34;https://www.congress.gov/116/bills/hres109/BILLS-116hres109ih.pdf&#34; class=&#34;uri&#34;&gt;https://www.congress.gov/116/bills/hres109/BILLS-116hres109ih.pdf&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Konisky, D. M., &amp;amp; Woods, N. D. (2016). Environmental Policy, Federalism, and the Obama Presidency. Publius, 46(3), 366–391. &lt;a href=&#34;https://doi.org/10.1093/publius/pjw004&#34; class=&#34;uri&#34;&gt;https://doi.org/10.1093/publius/pjw004&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Laird, F. N., &amp;amp; Stefes, C. (2009). The diverging paths of German and United States policies for renewable energy: Sources of difference. Energy Policy, 37(7), 2619–2629. &lt;a href=&#34;https://doi.org/10.1016/j.enpol.2009.02.027&#34; class=&#34;uri&#34;&gt;https://doi.org/10.1016/j.enpol.2009.02.027&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Massachusetts v. EPA, 549 U.S. 497 (2007). Retrieved from: &lt;a href=&#34;https://supreme.justia.com/cases/federal/us/549/497/&#34; class=&#34;uri&#34;&gt;https://supreme.justia.com/cases/federal/us/549/497/&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;McGrath, L. F., &amp;amp; Bernauer, T. (2017). How strong is public support for unilateral climate policy and what drives it? Wiley Interdisciplinary Reviews: Climate Change. Wiley-Blackwell. &lt;a href=&#34;https://doi.org/10.1002/wcc.484&#34; class=&#34;uri&#34;&gt;https://doi.org/10.1002/wcc.484&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;New Jersey Department of Environmental Protection (NJ DEP). (2018). CO2 Budget Trading Program Rules N.J.A.C. 7:27C. Retrieved from: &lt;a href=&#34;https://www.nj.gov/dep/rules/notices/20181217b.html&#34; class=&#34;uri&#34;&gt;https://www.nj.gov/dep/rules/notices/20181217b.html&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;OR Legis. Assemb. HB2020 Reg. Sess. (2019). Retrieved from: &lt;a href=&#34;https://olis.leg.state.or.us/liz/2019R1/Measures/Overview/HB2020&#34; class=&#34;uri&#34;&gt;https://olis.leg.state.or.us/liz/2019R1/Measures/Overview/HB2020&lt;/a&gt; The Regional Greenhouse Gas Initiative (RGGI Inc.). (2011). New Jersey Participation.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Program overview and design. Retrieved from: &lt;a href=&#34;https://www.rggi.org/program-overviewand-design/design-archive/nj-participation&#34; class=&#34;uri&#34;&gt;https://www.rggi.org/program-overviewand-design/design-archive/nj-participation&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;Tingley, D., &amp;amp; Tomz, M. (2014). Conditional Cooperation and Climate Change. Comparative Political Studies, 47(3), 344–368. &lt;a href=&#34;https://doi.org/10.1177/0010414013509571&#34; class=&#34;uri&#34;&gt;https://doi.org/10.1177/0010414013509571&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;United States Environmental Protection Agency (US EPA). (2018). EPA Proposes Affordable Clean Energy (ACE) Rule. Retrieved from: &lt;a href=&#34;https://www.epa.gov/newsreleases/epaproposes-affordable-clean-energy-ace-rule&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/newsreleases/epaproposes-affordable-clean-energy-ace-rule&lt;/a&gt;&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
 </description>
     </item>
     
