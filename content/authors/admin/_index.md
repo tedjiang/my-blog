@@ -22,7 +22,7 @@ interests:
 - Energy System
 - Environmental and Energy Economics
 - Life Cycle Assessment
-name: Yingfei (Ted) Jiang
+name: Yingfei "Ted" Jiang
 organizations:
 - name: Bren School of Environmental Science and Management
   url: "http://bren.ucsb.edu"
