@@ -7,7 +7,7 @@ output: html_document
 
 As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years. This project will explore the geographic distribution of TX power plants in 2018, the seasonal change of generation amount for four main generation types, and the generation mix change from 2001 to 2018.  
 
-![**Figure 1. A Wind Farm in TX.** With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)](texas-wind.jpg)
+![**Figure 1. A Wind Farm in TX.** With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)](/images/texas-wind.jpg)
   
 #### **0. Prepare the data.**
 ```{r setup, include=FALSE}
