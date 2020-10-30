@@ -1,7 +1,7 @@
 ---
 title: "Electricity Power Plants in the United States"
 author: "Yingfei Jiang"
-date: "1/31/2020"
+date: "2020-01-31"
 output: html_document
 ---
 
@@ -20,7 +20,7 @@ library(wesanderson)
 library(kableExtra)
 ```
 
-![**Figure 1. The Diablo Canyon Nuclear Power Plant.** Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)](/images/diablo_canyon.jpg)
+![**Figure 1. The Diablo Canyon Nuclear Power Plant.** Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)](/img/diablo_canyon.jpg)
 
 ```{r}
 
