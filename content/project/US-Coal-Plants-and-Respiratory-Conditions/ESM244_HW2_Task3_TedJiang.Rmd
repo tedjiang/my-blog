@@ -5,7 +5,7 @@ date: "2020-02-12"
 output: html_document
 ---
 
-Coal power plants are notorious for their $NO_x$, $SO_2$, and particulate matter emissions, which could all cause respiratory conditions. This project will map the large scale coal power plants (annual generation > 1000GWh) in the US, and the prevalence of three major respiratory conditions--chronic obstructive pulmonary disease (COPD), asthma, and lung and bronchus cancer-- in all US states. Remember that this project will not do any regressions on the causality between coal power plants and respiratory conditions. Respiratory conditions are related to many factors such as mobile emissions, climate, geographic features, etc. Hence, it is irresponsible to use this project to make any declarations.
+Coal power plants are notorious for their $NO_x$, $SO_2$, and particulate matter emissions, which could all cause respiratory conditions. This project will map the large scale coal power plants (annual generation > 1000 GWh) in the US, and the prevalence of three major respiratory conditions--chronic obstructive pulmonary disease (COPD), asthma, and lung and bronchus cancer-- in all US states. Remember that this project will not do any regressions on the causality between coal power plants and respiratory conditions. Respiratory conditions are related to many factors such as mobile emissions, climate, geographic features, etc. Hence, it is irresponsible to use this project to make any declarations.
 
 ![**Figure 1. A Coal Power Plant in Kentucky.** (Source: Luke Sharrett for The New York Times, 2016)](/img/superJumbo.jpg)
 
