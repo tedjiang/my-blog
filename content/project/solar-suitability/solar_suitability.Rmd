@@ -1,0 +1,10 @@
+---
+title: "Solar Suitability in California"
+author: "Yingfei Jiang"
+date: "2/7/2021"
+output: html_document
+---
+
+This is a course project where we developed a spatial model to analyse which counties in California are more suitable for solar farm constuction. Three key aspects considered in this model are (1) solar energy input, (2) land suitability, and (3) land value. 
+
+See the [project report](/pdf_files/SolarSuitability.pdf) for more info.
