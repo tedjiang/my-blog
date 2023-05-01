@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Projects | Yingfei (Ted) Jiang</title>
+    <title>Projects | Yingfei &#34;Ted&#34; Jiang</title>
     <link>/project/</link>
       <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
     <description>Projects</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Tue, 18 Feb 2020 00:00:00 +0000</lastBuildDate>
     <image>
       <url>img/map[gravatar:%!s(bool=false) shape:circle]</url>
       <title>Projects</title>
@@ -13,12 +13,224 @@
     </image>
     
     <item>
+      <title>Time Series for TX power</title>
+      <link>/project/time-series-for-tx-power/time-series-for-tx-power/</link>
+      <pubDate>Tue, 18 Feb 2020 00:00:00 +0000</pubDate>
+      <guid>/project/time-series-for-tx-power/time-series-for-tx-power/</guid>
+      <description>
+&lt;link href=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years. This project will explore the geographic distribution of TX power plants in 2018, the seasonal change of generation amount for four main generation types, and the generation mix change from 2001 to 2018.&lt;/p&gt;
+&lt;div class=&#34;figure&#34;&gt;
+&lt;img src=&#34;/img/texas-wind.jpg&#34; alt=&#34;Figure 1. A Wind Farm in TX. With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&#34; /&gt;
+&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. A Wind Farm in TX.&lt;/strong&gt; With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&lt;/p&gt;
+&lt;/div&gt;
+&lt;div id=&#34;prepare-the-data.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;0. Prepare the data.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Filtering TX plants
+
+plant_df_raw &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;PLNT18&amp;quot;)
+
+plant_tx_df &amp;lt;- plant_df_raw %&amp;gt;% 
+  filter(PSTATABB == &amp;quot;TX&amp;quot;) %&amp;gt;% 
+  clean_names() %&amp;gt;% 
+  filter(plngenan &amp;gt;= 10000) %&amp;gt;% 
+  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&amp;gt;% 
+  drop_na() %&amp;gt;% 
+  mutate(type = case_when(
+    plfuelct %in% c(&amp;quot;OFSL&amp;quot;, &amp;quot;OTHF&amp;quot;) ~ &amp;quot;OTHER&amp;quot;,
+    TRUE  ~ plfuelct
+  )) %&amp;gt;% 
+  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;))) #Changing levels to make the color match the type later
+
+plant_tx_sf &amp;lt;- st_as_sf(plant_tx_df, coords = c(&amp;quot;lon&amp;quot;, &amp;quot;lat&amp;quot;), crs = 4326)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw1 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2001_2002_FINAL&amp;quot;)
+raw2 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2003_2004_FINAL&amp;quot;)
+raw3 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2005-2007_FINAL&amp;quot;)
+raw4 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2008-2009_FINAL&amp;quot;)
+raw5 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2012_FINAL&amp;quot;)
+raw6 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2013_FINAL&amp;quot;)
+raw7 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2014_Final&amp;quot;)
+raw8 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2015_Final&amp;quot;)
+raw9 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2016_Preliminary&amp;quot;)
+raw10 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2017_Preliminary&amp;quot;)
+raw11 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2018_Preliminary&amp;quot;)
+raw12 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2019_Preliminary&amp;quot;)
+raw13 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2010-2011_FINAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw_df &amp;lt;- bind_rows(raw1, raw2, raw3, raw4, raw5, raw6, raw7, raw8, raw9, raw10, raw11, raw12, raw13) %&amp;gt;% 
+  clean_names()&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_ts &amp;lt;- raw_df %&amp;gt;% 
+  filter(state == &amp;quot;TX&amp;quot;) %&amp;gt;% 
+  filter(type_of_producer == &amp;quot;Total Electric Power Industry&amp;quot;) %&amp;gt;% 
+  filter(year != 2019) %&amp;gt;% 
+  mutate(yearmonth = str_c(as.character(year), &amp;quot;/&amp;quot;, as.character(month), &amp;quot;/&amp;quot;, &amp;quot;1&amp;quot;)) %&amp;gt;% 
+  mutate(yearmonth = ymd(yearmonth)) %&amp;gt;% 
+  mutate(ym_sep = yearmonth(yearmonth)) %&amp;gt;% 
+  mutate(type = case_when(
+    energy_source == &amp;quot;Coal&amp;quot; ~ &amp;quot;COAL&amp;quot;,
+    energy_source == &amp;quot;Petroleum&amp;quot; ~ &amp;quot;OIL&amp;quot;,
+    energy_source %in% c(&amp;quot;Natural Gas&amp;quot;, &amp;quot;Other Gases&amp;quot; ) ~ &amp;quot;GAS&amp;quot;,
+    energy_source == &amp;quot;Nuclear&amp;quot; ~ &amp;quot;NUCLEAR&amp;quot;,
+    energy_source == &amp;quot;Hydroelectric Conventional&amp;quot;  ~ &amp;quot;HYDRO&amp;quot;,
+    energy_source == &amp;quot;Wind&amp;quot; ~ &amp;quot;WIND&amp;quot;,
+    energy_source == &amp;quot;Solar Thermal and Photovoltaic&amp;quot; ~ &amp;quot;SOLAR&amp;quot;,
+    energy_source %in% c(&amp;quot;Wood and Wood Derived Fuels&amp;quot;, &amp;quot;Other Biomass&amp;quot;) ~ &amp;quot;BIOMASS&amp;quot;,
+    energy_source == &amp;quot;Other&amp;quot; ~ &amp;quot;OTHER&amp;quot;,
+    energy_source == &amp;quot;Total&amp;quot; ~ &amp;quot;TOTAL&amp;quot;
+  )) %&amp;gt;% 
+  group_by(ym_sep, yearmonth, type) %&amp;gt;% 
+  summarise(generation = sum(generation_megawatthours)) %&amp;gt;% 
+  mutate(year = year(yearmonth),
+         month = month(yearmonth)) %&amp;gt;% 
+  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;, &amp;quot;TOTAL&amp;quot;))) #Changing levels to make the color match the type later
+
+tx_ts_breakdown &amp;lt;- tx_ts %&amp;gt;% 
+  filter(type != &amp;quot;TOTAL&amp;quot;)
+
+tx_ts_total &amp;lt;- tx_ts %&amp;gt;% 
+  filter(type == &amp;quot;TOTAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;div id=&#34;geographic-locations-for-tx-power-plants.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;1. Geographic locations for TX power plants.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Creating a TX map
+
+us_county_raw &amp;lt;- read_sf(dsn = &amp;quot;cb_2018_us_county_500k&amp;quot;, layer = &amp;quot;cb_2018_us_county_500k&amp;quot;)
+  
+tx_map &amp;lt;- us_county_raw  %&amp;gt;%   
+  dplyr::filter(STATEFP == &amp;#39;48&amp;#39;) %&amp;gt;%
+  select(NAME) %&amp;gt;% 
+  st_transform(crs = 4326)
+
+#plot(tx_map)&lt;/code&gt;&lt;/pre&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_plant_map &amp;lt;- ggplot(tx_map)+
+  geom_sf(fill = &amp;quot;white&amp;quot;,
+          color = &amp;quot;black&amp;quot;,
+          size = 0.2)+
+  geom_sf(data = plant_tx_sf,
+          aes(fill = type,
+              color = type,
+              size = plngenan/1000), #Unit in GWh
+          alpha = 0.8)+
+  scale_size(guide = &amp;quot;none&amp;quot;) + #Removing size legend
+  labs(fill = &amp;quot;Plant Type&amp;quot;,
+       color = &amp;quot;Plant Type&amp;quot;)+
+  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)+
+  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)
+
+tx_plant_map&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 2. Geographic Locations of TX Power Plants.&lt;/strong&gt; Each bubble on the map indicates a power plant. The color of the bubble indicates the type of the plant. The size of the bubble indicates the total generation amount of the plant in 2018. (Source: eGrid, 2018)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Traditional large plants like coal, gas, and nuclear concentrate in the east region of the state.&lt;/li&gt;
+&lt;li&gt;Small scale wind plants concentrates in the north and south region of the state.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;tx-generation-mix-change-from-2001-to-2018.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;2. TX generation mix change from 2001 to 2018.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble &amp;lt;- as_tsibble(tx_ts_breakdown, key = type, index = ym_sep) %&amp;gt;% 
+  fill_gaps()
+
+tx_tsibble1 &amp;lt;- tx_tsibble %&amp;gt;% 
+  rename(&amp;#39;Generation Type&amp;#39; = type) #Just changing the label name
+
+tx_tsibble1 %&amp;gt;% 
+  autoplot(generation/1000)+
+  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 3. TX Generation Change from 2001 to 2018 by Generation Type.&lt;/strong&gt; The color of the line indicates the generation type. Gas, coal, wind, and nuclear contributes the most to TX electricity. (Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Gas, coal and nuclear show strong seasonality.&lt;/li&gt;
+&lt;li&gt;The seasonality for wind is less obvious.&lt;/li&gt;
+&lt;li&gt;Coal shows a trend of decreasing.&lt;/li&gt;
+&lt;li&gt;Wind shows a trend of increasing.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;total_annually &amp;lt;- tx_ts_total %&amp;gt;% 
+  group_by(year) %&amp;gt;% 
+  summarise(generation = sum(generation))
+
+total_annually_breakdown &amp;lt;- tx_ts_breakdown %&amp;gt;% 
+  group_by(year, type) %&amp;gt;% 
+  summarise(generation = sum(generation))
+  
+
+ggplot()+
+  geom_line(data = total_annually, 
+            aes(x = year, y = generation/1000),
+            size = 2)+
+  scale_x_continuous(breaks=seq(2001,2018,1))+
+  geom_bar(data = total_annually_breakdown, 
+           aes(x = year, y = generation/1000, fill = type), 
+           stat = &amp;quot;identity&amp;quot;,
+           width = 0.4,
+           alpha = 0.8)+
+  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
+  theme_classic()+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;, fill = &amp;quot;Generation Type&amp;quot;) +
+  scale_y_continuous(expand = c(0, 0))+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 4. TX Generation Change from 2001 to 2018 in Total and in Breakdown.&lt;/strong&gt; The black bold line indicates the total generation amount between 2001 to 2018. The color of the bar for each year indicates the mix of generation type.(Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;In total, the electricity generation in TX shows an increasing trend.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;the-seasonal-change-of-the-generation-amount-for-four-main-generation-types.&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;3. The seasonal change of the generation amount for four main generation types.&lt;/strong&gt;&lt;/h4&gt;
+&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble_major &amp;lt;- tx_tsibble %&amp;gt;% 
+  filter(type %in% c(&amp;quot;GAS&amp;quot;, &amp;quot;COAL&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;WIND&amp;quot;))
+
+#tx_tsibble_major %&amp;gt;% 
+#  gg_season(generation, max_col = 100)+
+#  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;))
+
+ggplot(data = tx_tsibble_major, aes(x = month, y = generation/1000, group = year))+
+  geom_line(aes(color = year))+
+  facet_wrap(~type,
+             ncol = 1,
+             scale = &amp;quot;free&amp;quot;,
+             strip.position = &amp;quot;right&amp;quot;)+
+  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;)) + #manually manipulating color
+  theme_classic()+
+  scale_y_continuous(labels = scientific)+
+  scale_x_continuous(breaks=seq(1,12,1))+
+  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Month&amp;quot;, color = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Figure 5. Season Plots for Coal, Gas, Nuclear, and Wind Generation in TX.&lt;/strong&gt; A season plot shows the change of the generation in one year. Each line in the plot represents one year, indicated by the color scale. (Source: US EIA, 2020)&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;For coal and gas, the generation pattern in one year follows the common pattern of high electricity demand in summer. As a result, the generation increases significantly during summer months to guarantee supply.&lt;/li&gt;
+&lt;li&gt;However, nuclear and wind do not show such pattern, probably due to their continous generation characteristics and dependence on weather. In fact, the lack of flexibility is usually considered as a disadvantage of renewable powers.&lt;/li&gt;
+&lt;li&gt;There are two significant generation drops for nuclear in October and April. This is probably due to the annual shutdown of the reactors.&lt;/li&gt;
+&lt;li&gt;Similarly, the season plot indicates the decreasing of coal generation and the increasing of wind generation.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/div&gt;
+&lt;div id=&#34;reference&#34; class=&#34;section level4&#34;&gt;
+&lt;h4&gt;&lt;strong&gt;Reference:&lt;/strong&gt;&lt;/h4&gt;
+&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
+&lt;li&gt;CBS News. (2018). A red state goes green: How Texas became a pioneer in wind energy. Available at: &lt;a href=&#34;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&#34; class=&#34;uri&#34;&gt;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;US EPA. (2020). Emissions &amp;amp; Generation Resource Integrated Database (eGRID). Available at: &lt;a href=&#34;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&lt;/a&gt;&lt;br /&gt;
+&lt;/li&gt;
+&lt;li&gt;US EIA. (2020). Detailed preliminary EIA-923 monthly and annual survey data (back to 1990). Available at: &lt;a href=&#34;https://www.eia.gov/electricity/data.php#generation&#34; class=&#34;uri&#34;&gt;https://www.eia.gov/electricity/data.php#generation&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Electricity Power Plants in the United States</title>
       <link>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <pubDate>Fri, 31 Jan 2020 00:00:00 +0000</pubDate>
       <guid>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</guid>
       <description>
+&lt;link href=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
 &lt;script src=&#34;/rmarkdown-libs/kePrint/kePrint.js&#34;&gt;&lt;/script&gt;
+&lt;link href=&#34;/rmarkdown-libs/lightable/lightable.css&#34; rel=&#34;stylesheet&#34; /&gt;
 
 
 &lt;p&gt;This project will explore the electricity generation plants in the United States and their air pollutants and greenhouse gas (GHG) emissions. There are three parts in this porject.&lt;br /&gt;
@@ -26,7 +238,7 @@ Part one explores the average electricity GHG emission factor on a state level a
 Part two explores the generation plants in ten most populated states, and their total &lt;span class=&#34;math inline&#34;&gt;\(NO_x\)&lt;/span&gt;, &lt;span class=&#34;math inline&#34;&gt;\(SO_2\)&lt;/span&gt;, and GHG emission in 2018.&lt;br /&gt;
 Part three explores the electricity generation and emissions for California counties in 2018.&lt;/p&gt;
 &lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;diablo_canyon.jpg&#34; alt=&#34;Figure 1. The Diablo Canyon Nuclear Power Plant. Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)&#34; /&gt;
+&lt;img src=&#34;/img/diablo_canyon.jpg&#34; alt=&#34;Figure 1. The Diablo Canyon Nuclear Power Plant. Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)&#34; /&gt;
 &lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. The Diablo Canyon Nuclear Power Plant.&lt;/strong&gt; Located in San Luis Obispo county, the Diablo Canyon nuclear power plant is the last operating nuclear power plant in California. (Source: The New York Times, 2016)&lt;/p&gt;
 &lt;/div&gt;
 &lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Read in data sets.
@@ -1283,6 +1495,36 @@ Yuba
     </item>
     
     <item>
+      <title>A Produce Packaging Life Cycle Assessment</title>
+      <link>/project/packaging-lca/packaging_lca/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/packaging-lca/packaging_lca/</guid>
+      <description>
+&lt;link href=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;This is a course project where we used LCA to analyze the environmental impact of produce packaging. Although plastic packaging has gained negative reputation due to its various environmental impacts, it also provides valuable function of extending produce shelflife, which could reduce food waste. In this project we evaluated if modified atmosphere packaging (MAP) is environmentally beneficial to three fresh produces–asparagus, bell pepper, and tomato. See the &lt;a href=&#34;/pdf_files/ProducePackagingLCA.pdf&#34;&gt;project article&lt;/a&gt; for detailed results and discussion.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Evaluating the Impacts of Sourcing Food Waste as a Raw Material for Production</title>
+      <link>/project/using-food-waste-to-reduce-food-waste/untitled/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>/project/using-food-waste-to-reduce-food-waste/untitled/</guid>
+      <description>
+&lt;link href=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
+
+
+&lt;p&gt;This project is a group project which leads to the acquisition of the degree of Master of Environmental Science and Management for the Bren School of Environmental Science &amp;amp; Management, University of California, Santa Barbara.&lt;/p&gt;
+&lt;p&gt;The concept of “circular economy” has recently gained traction as a way to help companies become more sustainable. Circular economy suggests that environmental impacts can be reduced by sourcing wastes rather than virgin materials. However, this claim remains largely untested. This project works with Apeel Sciences, a small biotechnology startup interested in sourcing food waste as an input to their product, to evaluate the environmental impacts of sourcing waste using two different Life Cycle Assessment methodologies, economic allocation and substitution. We show that economic allocation may not capture impacts outside the immediate system of interest, which we demonstrate can be as large if not larger than those generated by the immediate system. This is particularly true when the “waste” under consideration is not truly a waste and has another established use. Therefore, using different methodologies results in different recommendations of what to source based on environmental impacts, highlighting that sourcing wastes may not be as sustainable as originally thought. We distill these findings into a comprehensive framework that allows companies to replicate our analysis and develop a more holistic understanding of the environmental impacts of sourcing a waste.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href=&#34;/pdf_files/WasteWatchersFinalReport.pdf&#34;&gt;final report&lt;/a&gt; for more info.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
       <title>Principal Component Analysis on Meat Products</title>
       <link>/project/principal-component-analysis-on-meat-products/esm244_hw1_task2_tedjiang/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -1347,209 +1589,17 @@ my_biplot&lt;/code&gt;&lt;/pre&gt;
     </item>
     
     <item>
-      <title>Time Series for TX power</title>
-      <link>/project/time-series-for-tx-power/time-series-for-tx-power/</link>
+      <title>Solar Suitability in California</title>
+      <link>/project/solar-suitability/solar_suitability/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>/project/time-series-for-tx-power/time-series-for-tx-power/</guid>
+      <guid>/project/solar-suitability/solar_suitability/</guid>
       <description>
+&lt;link href=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.css&#34; rel=&#34;stylesheet&#34; /&gt;
+&lt;script src=&#34;/rmarkdown-libs/anchor-sections/anchor-sections.js&#34;&gt;&lt;/script&gt;
 
 
-&lt;p&gt;As the biggest state in the US, Texas generates significant amounts of electricity every year. As a state traditionally depending on fossil fuel, the generation mix has been changing in recent years. This project will explore the geographic distribution of TX power plants in 2018, the seasonal change of generation amount for four main generation types, and the generation mix change from 2001 to 2018.&lt;/p&gt;
-&lt;div class=&#34;figure&#34;&gt;
-&lt;img src=&#34;texas-wind.jpg&#34; alt=&#34;Figure 1. A Wind Farm in TX. With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&#34; /&gt;
-&lt;p class=&#34;caption&#34;&gt;&lt;strong&gt;Figure 1. A Wind Farm in TX.&lt;/strong&gt; With fast growing industry, wind electricity in Texas is slowly outpacing coal. (Source: CBS News, 2018)&lt;/p&gt;
-&lt;/div&gt;
-&lt;div id=&#34;prepare-the-data.&#34; class=&#34;section level4&#34;&gt;
-&lt;h4&gt;&lt;strong&gt;0. Prepare the data.&lt;/strong&gt;&lt;/h4&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Filtering TX plants
-
-plant_df_raw &amp;lt;- read_excel(&amp;quot;egrid2018_data.xlsx&amp;quot;, skip = 1, sheet = &amp;quot;PLNT18&amp;quot;)
-
-plant_tx_df &amp;lt;- plant_df_raw %&amp;gt;% 
-  filter(PSTATABB == &amp;quot;TX&amp;quot;) %&amp;gt;% 
-  clean_names() %&amp;gt;% 
-  filter(plngenan &amp;gt;= 10000) %&amp;gt;% 
-  select(pstatabb, plprmfl, plfuelct, plngenan, lat, lon) %&amp;gt;% 
-  drop_na() %&amp;gt;% 
-  mutate(type = case_when(
-    plfuelct %in% c(&amp;quot;OFSL&amp;quot;, &amp;quot;OTHF&amp;quot;) ~ &amp;quot;OTHER&amp;quot;,
-    TRUE  ~ plfuelct
-  )) %&amp;gt;% 
-  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;))) #Changing levels to make the color match the type later
-
-plant_tx_sf &amp;lt;- st_as_sf(plant_tx_df, coords = c(&amp;quot;lon&amp;quot;, &amp;quot;lat&amp;quot;), crs = 4326)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw1 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2001_2002_FINAL&amp;quot;)
-raw2 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2003_2004_FINAL&amp;quot;)
-raw3 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2005-2007_FINAL&amp;quot;)
-raw4 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2008-2009_FINAL&amp;quot;)
-raw5 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2012_FINAL&amp;quot;)
-raw6 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2013_FINAL&amp;quot;)
-raw7 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2014_Final&amp;quot;)
-raw8 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2015_Final&amp;quot;)
-raw9 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2016_Preliminary&amp;quot;)
-raw10 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2017_Preliminary&amp;quot;)
-raw11 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2018_Preliminary&amp;quot;)
-raw12 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2019_Preliminary&amp;quot;)
-raw13 &amp;lt;- read_excel(&amp;quot;generation_monthly.xlsx&amp;quot;, sheet = &amp;quot;2010-2011_FINAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;raw_df &amp;lt;- bind_rows(raw1, raw2, raw3, raw4, raw5, raw6, raw7, raw8, raw9, raw10, raw11, raw12, raw13) %&amp;gt;% 
-  clean_names()&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_ts &amp;lt;- raw_df %&amp;gt;% 
-  filter(state == &amp;quot;TX&amp;quot;) %&amp;gt;% 
-  filter(type_of_producer == &amp;quot;Total Electric Power Industry&amp;quot;) %&amp;gt;% 
-  filter(year != 2019) %&amp;gt;% 
-  mutate(yearmonth = str_c(as.character(year), &amp;quot;/&amp;quot;, as.character(month), &amp;quot;/&amp;quot;, &amp;quot;1&amp;quot;)) %&amp;gt;% 
-  mutate(yearmonth = ymd(yearmonth)) %&amp;gt;% 
-  mutate(ym_sep = yearmonth(yearmonth)) %&amp;gt;% 
-  mutate(type = case_when(
-    energy_source == &amp;quot;Coal&amp;quot; ~ &amp;quot;COAL&amp;quot;,
-    energy_source == &amp;quot;Petroleum&amp;quot; ~ &amp;quot;OIL&amp;quot;,
-    energy_source %in% c(&amp;quot;Natural Gas&amp;quot;, &amp;quot;Other Gases&amp;quot; ) ~ &amp;quot;GAS&amp;quot;,
-    energy_source == &amp;quot;Nuclear&amp;quot; ~ &amp;quot;NUCLEAR&amp;quot;,
-    energy_source == &amp;quot;Hydroelectric Conventional&amp;quot;  ~ &amp;quot;HYDRO&amp;quot;,
-    energy_source == &amp;quot;Wind&amp;quot; ~ &amp;quot;WIND&amp;quot;,
-    energy_source == &amp;quot;Solar Thermal and Photovoltaic&amp;quot; ~ &amp;quot;SOLAR&amp;quot;,
-    energy_source %in% c(&amp;quot;Wood and Wood Derived Fuels&amp;quot;, &amp;quot;Other Biomass&amp;quot;) ~ &amp;quot;BIOMASS&amp;quot;,
-    energy_source == &amp;quot;Other&amp;quot; ~ &amp;quot;OTHER&amp;quot;,
-    energy_source == &amp;quot;Total&amp;quot; ~ &amp;quot;TOTAL&amp;quot;
-  )) %&amp;gt;% 
-  group_by(ym_sep, yearmonth, type) %&amp;gt;% 
-  summarise(generation = sum(generation_megawatthours)) %&amp;gt;% 
-  mutate(year = year(yearmonth),
-         month = month(yearmonth)) %&amp;gt;% 
-  mutate(type = factor(type, levels = c(&amp;quot;COAL&amp;quot;, &amp;quot;OIL&amp;quot;, &amp;quot;GAS&amp;quot;, &amp;quot;BIOMASS&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;HYDRO&amp;quot;, &amp;quot;WIND&amp;quot;, &amp;quot;OTHER&amp;quot;, &amp;quot;SOLAR&amp;quot;, &amp;quot;TOTAL&amp;quot;))) #Changing levels to make the color match the type later
-
-tx_ts_breakdown &amp;lt;- tx_ts %&amp;gt;% 
-  filter(type != &amp;quot;TOTAL&amp;quot;)
-
-tx_ts_total &amp;lt;- tx_ts %&amp;gt;% 
-  filter(type == &amp;quot;TOTAL&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;div id=&#34;geographic-locations-for-tx-power-plants.&#34; class=&#34;section level4&#34;&gt;
-&lt;h4&gt;&lt;strong&gt;1. Geographic locations for TX power plants.&lt;/strong&gt;&lt;/h4&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;#Creating a TX map
-
-us_county_raw &amp;lt;- read_sf(dsn = &amp;quot;cb_2018_us_county_500k&amp;quot;, layer = &amp;quot;cb_2018_us_county_500k&amp;quot;)
-  
-tx_map &amp;lt;- us_county_raw  %&amp;gt;%   
-  dplyr::filter(STATEFP == &amp;#39;48&amp;#39;) %&amp;gt;%
-  select(NAME) %&amp;gt;% 
-  st_transform(crs = 4326)
-
-#plot(tx_map)&lt;/code&gt;&lt;/pre&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_plant_map &amp;lt;- ggplot(tx_map)+
-  geom_sf(fill = &amp;quot;white&amp;quot;,
-          color = &amp;quot;black&amp;quot;,
-          size = 0.2)+
-  geom_sf(data = plant_tx_sf,
-          aes(fill = type,
-              color = type,
-              size = plngenan/1000), #Unit in GWh
-          alpha = 0.8)+
-  scale_size(guide = &amp;quot;none&amp;quot;) + #Removing size legend
-  labs(fill = &amp;quot;Plant Type&amp;quot;,
-       color = &amp;quot;Plant Type&amp;quot;)+
-  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)+
-  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1)
-
-tx_plant_map&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Figure 2. Geographic Locations of TX Power Plants.&lt;/strong&gt; Each bubble on the map indicates a power plant. The color of the bubble indicates the type of the plant. The size of the bubble indicates the total generation amount of the plant in 2018. (Source: eGrid, 2018)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Traditional large plants like coal, gas, and nuclear concentrate in the east region of the state.&lt;/li&gt;
-&lt;li&gt;Small scale wind plants concentrates in the north and south region of the state.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div id=&#34;tx-generation-mix-change-from-2001-to-2018.&#34; class=&#34;section level4&#34;&gt;
-&lt;h4&gt;&lt;strong&gt;2. TX generation mix change from 2001 to 2018.&lt;/strong&gt;&lt;/h4&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble &amp;lt;- as_tsibble(tx_ts_breakdown, key = type, index = ym_sep) %&amp;gt;% 
-  fill_gaps()
-
-tx_tsibble1 &amp;lt;- tx_tsibble %&amp;gt;% 
-  rename(&amp;#39;Generation Type&amp;#39; = type) #Just changing the label name
-
-tx_tsibble1 %&amp;gt;% 
-  autoplot(generation/1000)+
-  scale_color_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
-  theme_classic()+
-  scale_y_continuous(labels = scientific)+
-  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Figure 3. TX Generation Change from 2001 to 2018 by Generation Type.&lt;/strong&gt; The color of the line indicates the generation type. Gas, coal, wind, and nuclear contributes the most to TX electricity. (Source: US EIA, 2020)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;Gas, coal and nuclear show strong seasonality.&lt;/li&gt;
-&lt;li&gt;The seasonality for wind is less obvious.&lt;/li&gt;
-&lt;li&gt;Coal shows a trend of decreasing.&lt;/li&gt;
-&lt;li&gt;Wind shows a trend of increasing.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;total_annually &amp;lt;- tx_ts_total %&amp;gt;% 
-  group_by(year) %&amp;gt;% 
-  summarise(generation = sum(generation))
-
-total_annually_breakdown &amp;lt;- tx_ts_breakdown %&amp;gt;% 
-  group_by(year, type) %&amp;gt;% 
-  summarise(generation = sum(generation))
-  
-
-ggplot()+
-  geom_line(data = total_annually, 
-            aes(x = year, y = generation/1000),
-            size = 2)+
-  scale_x_continuous(breaks=seq(2001,2018,1))+
-  geom_bar(data = total_annually_breakdown, 
-           aes(x = year, y = generation/1000, fill = type), 
-           stat = &amp;quot;identity&amp;quot;,
-           width = 0.4,
-           alpha = 0.8)+
-  scale_fill_paletteer_d(&amp;quot;ggsci::lanonc_lancet&amp;quot;, direction = -1) + 
-  theme_classic()+
-  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Year&amp;quot;, fill = &amp;quot;Generation Type&amp;quot;) +
-  scale_y_continuous(expand = c(0, 0))+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Figure 4. TX Generation Change from 2001 to 2018 in Total and in Breakdown.&lt;/strong&gt; The black bold line indicates the total generation amount between 2001 to 2018. The color of the bar for each year indicates the mix of generation type.(Source: US EIA, 2020)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;In total, the electricity generation in TX shows an increasing trend.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div id=&#34;the-seasonal-change-of-the-generation-amount-for-four-main-generation-types.&#34; class=&#34;section level4&#34;&gt;
-&lt;h4&gt;&lt;strong&gt;3. The seasonal change of the generation amount for four main generation types.&lt;/strong&gt;&lt;/h4&gt;
-&lt;pre class=&#34;r&#34;&gt;&lt;code&gt;tx_tsibble_major &amp;lt;- tx_tsibble %&amp;gt;% 
-  filter(type %in% c(&amp;quot;GAS&amp;quot;, &amp;quot;COAL&amp;quot;, &amp;quot;NUCLEAR&amp;quot;, &amp;quot;WIND&amp;quot;))
-
-#tx_tsibble_major %&amp;gt;% 
-#  gg_season(generation, max_col = 100)+
-#  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;))
-
-ggplot(data = tx_tsibble_major, aes(x = month, y = generation/1000, group = year))+
-  geom_line(aes(color = year))+
-  facet_wrap(~type,
-             ncol = 1,
-             scale = &amp;quot;free&amp;quot;,
-             strip.position = &amp;quot;right&amp;quot;)+
-  scale_color_gradientn(colors = paletteer_d(&amp;quot;ggsci::default_gsea&amp;quot;)) + #manually manipulating color
-  theme_classic()+
-  scale_y_continuous(labels = scientific)+
-  scale_x_continuous(breaks=seq(1,12,1))+
-  labs(y = &amp;quot;Generation (GWh)&amp;quot;, x = &amp;quot;Month&amp;quot;, color = &amp;quot;Year&amp;quot;)&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;&lt;img src=&#34;/project/time-series-for-tx-power/Time-Series-for-TX-power_files/figure-html/unnamed-chunk-9-1.png&#34; width=&#34;672&#34; /&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;Figure 5. Season Plots for Coal, Gas, Nuclear, and Wind Generation in TX.&lt;/strong&gt; A season plot shows the change of the generation in one year. Each line in the plot represents one year, indicated by the color scale. (Source: US EIA, 2020)&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;For coal and gas, the generation pattern in one year follows the common pattern of high electricity demand in summer. As a result, the generation increases significantly during summer months to guarantee supply.&lt;/li&gt;
-&lt;li&gt;However, nuclear and wind do not show such pattern, probably due to their continous generation characteristics and dependence on weather. In fact, the lack of flexibility is usually considered as a disadvantage of renewable powers.&lt;/li&gt;
-&lt;li&gt;There are two significant generation drops for nuclear in October and April. This is probably due to the annual shutdown of the reactors.&lt;/li&gt;
-&lt;li&gt;Similarly, the season plot indicates the decreasing of coal generation and the increasing of wind generation.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/div&gt;
-&lt;div id=&#34;reference&#34; class=&#34;section level4&#34;&gt;
-&lt;h4&gt;&lt;strong&gt;Reference:&lt;/strong&gt;&lt;/h4&gt;
-&lt;ol style=&#34;list-style-type: decimal&#34;&gt;
-&lt;li&gt;CBS News. (2018). A red state goes green: How Texas became a pioneer in wind energy. Available at: &lt;a href=&#34;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&#34; class=&#34;uri&#34;&gt;https://www.cbsnews.com/news/texas-leader-in-renewable-energy-wind-turbines/&lt;/a&gt;&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;US EPA. (2020). Emissions &amp;amp; Generation Resource Integrated Database (eGRID). Available at: &lt;a href=&#34;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&#34; class=&#34;uri&#34;&gt;https://www.epa.gov/energy/emissions-generation-resource-integrated-database-egrid&lt;/a&gt;&lt;br /&gt;
-&lt;/li&gt;
-&lt;li&gt;US EIA. (2020). Detailed preliminary EIA-923 monthly and annual survey data (back to 1990). Available at: &lt;a href=&#34;https://www.eia.gov/electricity/data.php#generation&#34; class=&#34;uri&#34;&gt;https://www.eia.gov/electricity/data.php#generation&lt;/a&gt;&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
+&lt;p&gt;This is a course project where we developed a spatial model to analyse which counties in California are more suitable for solar farm constuction. Three key aspects considered in this model are (1) solar energy input, (2) land suitability, and (3) land value.&lt;/p&gt;
+&lt;p&gt;See the &lt;a href=&#34;/pdf_files/SolarSuitability.pdf&#34;&gt;project report&lt;/a&gt; for more info.&lt;/p&gt;
 </description>
     </item>
     

@@ -43,6 +43,21 @@
   </url>
   
   <url>
+    <loc>/project/</loc>
+    <lastmod>2020-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/time-series-for-tx-power/time-series-for-tx-power/</loc>
+    <lastmod>2020-02-18T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</loc>
+    <lastmod>2020-01-31T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/authors/admin/</loc>
     <lastmod>2019-04-07T00:00:00+00:00</lastmod>
   </url>
@@ -83,6 +98,11 @@
   </url>
   
   <url>
+    <loc>/post/climate-policy-after-trumps-paris-withdrawal-declaration/</loc>
+    <lastmod>2019-03-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>/slides/</loc>
     <lastmod>2019-02-05T00:00:00+00:00</lastmod>
   </url>
@@ -90,16 +110,6 @@
   <url>
     <loc>/slides/example/</loc>
     <lastmod>2019-02-05T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/privacy/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/terms/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -128,6 +138,10 @@
   </url>
   
   <url>
+    <loc>/project/packaging-lca/packaging_lca/</loc>
+  </url>
+  
+  <url>
     <loc>/categories/</loc>
   </url>
   
@@ -136,7 +150,7 @@
   </url>
   
   <url>
-    <loc>/project/electricity-generation-in-the-united-states/esm244_hw1_task1_tedjiang/</loc>
+    <loc>/project/using-food-waste-to-reduce-food-waste/untitled/</loc>
   </url>
   
   <url>
@@ -144,19 +158,11 @@
   </url>
   
   <url>
-    <loc>/project/</loc>
-  </url>
-  
-  <url>
-    <loc>/project/time-series-for-tx-power/time-series-for-tx-power/</loc>
+    <loc>/project/solar-suitability/solar_suitability/</loc>
   </url>
   
   <url>
     <loc>/project/us-coal-plants-and-respiratory-conditions/esm244_hw2_task3_tedjiang/</loc>
-  </url>
-  
-  <url>
-    <loc>/post/climate-policy-after-trumps-paris-withdrawal-declaration/</loc>
   </url>
   
 </urlset>
