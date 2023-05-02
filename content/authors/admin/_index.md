@@ -25,9 +25,9 @@ interests:
 - Corporate Sustainability / ESG
 name: Yingfei "Ted" Jiang
 organizations:
-- name: Bren School of Environmental Science and Management
-  url: "http://bren.ucsb.edu"
-role: Graduate Researcher
+- name: Bolt Threads
+  url: "https://boltthreads.com"
+role: LCA Engineer
 social:
 - icon: envelope
   icon_pack: fas
@@ -41,4 +41,4 @@ user_groups:
 - Visitors
 ---
 
-I am a sustainability specialist with passion in helping companies and organizations achieve their sustainability goals. I am professionally trained in environmental metrics like Carbon Accounting and Life Cycle Assessment, and utilize data analysis and scientific modeling in my work. I have experience with corporate sustainability initiatives such as SBTi, B-corp certificate, TCFD, CDP, etc. I am a strong communicator and a great team worker, and can effectively deliver complex information in an approachable way. During my free time, I like to spend time with my partner and our three cats and two frogs. I also enjoy music, movie, and video games.
+I am a sustainability specialist with passion in helping companies and organizations achieve their sustainability goals. I am professionally trained in environmental metrics like Carbon Accounting and Life Cycle Assessment, and utilize data analysis and scientific modeling in my work. I have experience with corporate sustainability initiatives such as SBTi, B-corp certificate, TCFD, CDP, etc. I am a strong communicator, a great team worker, and can effectively deliver complex information in an approachable way. During my free time, I like to spend time with my partner, our three cats and two frogs. I also enjoy music, movie, and video games.
