@@ -14,27 +14,40 @@ subtitle = ""
 # 
 # For available icons, see: https://sourcethemes.com/academic/docs/page-builder/#icons
 
-[[feature]]
-  icon = "r-project"
-  icon_pack = "fab"
-  name = "R"
-  description = "Proficient"
   
 [[feature]]
-  icon = "python"
-  icon_pack = "fab"
-  name = "Python"
-  description = "Proficient"  
+  icon = "industry"
+  icon_pack = "fas"
+  name = "Carbon Accounting"
+  description = "Scope 1, 2, and 3"
+
+[[feature]]
+  icon = "tree"
+  icon_pack = "fas"
+  name = "Life Cycle Assessment"
+  description = "Process-Based, EEIO"
   
 [[feature]]
-  icon = "java"
-  icon_pack = "fab"
-  name = "Java"
-  description = "Familiar"
+  icon = "leaf"
+  icon_pack = "fas"
+  name = "Corporate ESG Initiative"
+  description = "SBTi, CDP, TCFD, TNFD, AFi, etc."  
+  
+[[feature]]
+  icon = "chart-line"
+  icon_pack = "fas"
+  name = "Data Analysis"
+  description = "Econometrics, Time Series and Geographic Analyses, Principal Component Analysis"
 
 [[feature]]
   icon = "code"
   icon_pack = "fas"
-  name = "Fortran"
-  description = "Familiar"
+  name = "Programming Language and Software"
+  description = "R, Python, Java, SimaPro, Gabi, Tableau, MS Excel"  
+  
+[[feature]]
+  icon = "list"
+  icon_pack = "fas"
+  name = "Industry Knowledge"
+  description = "Energy, Fashion & Apparel, Bio-Technology, Agriculture"
 +++
