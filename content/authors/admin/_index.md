@@ -19,9 +19,10 @@ education:
     year: 2012-2016
 email: "tedjiang94@outlook.com"
 interests:
-- Energy System
-- Environmental and Energy Economics
-- Life Cycle Assessment
+- Sustainable Production
+- Economy Decarbonization
+- Environmental Metrics
+- Corporate Sustainability / ESG
 name: Yingfei "Ted" Jiang
 organizations:
 - name: Bren School of Environmental Science and Management
@@ -40,4 +41,4 @@ user_groups:
 - Visitors
 ---
 
-Ted is a graduate researcher in the Bren School of Environmental Science and Management. His research interest is the sustainability in energy development around the world, including storage technologies, renewable energies, and biomass consumptions. He is passionate about applying data-driven methodologies to understand the optimal energy strategies.
+I am a sustainability specialist with passion in helping companies and organizations achieve their sustainability goals. I am professionally trained in environmental metrics like Carbon Accounting and Life Cycle Assessment, and utilize data analysis and scientific modeling in my work. I have experience with corporate sustainability initiatives such as SBTi, B-corp certificate, TCFD, CDP, etc. I am a strong communicator and a great team worker, and can effectively deliver complex information in an approachable way. During my free time, I like to spend time with my partner and our three cats and two frogs. I also enjoy music, movie, and video games.
