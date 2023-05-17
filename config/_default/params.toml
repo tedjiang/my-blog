@@ -86,11 +86,11 @@ phone = ""
 
 # Address
 # For country_code, use the 2-letter ISO code (see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 )
-address = {street = "2400 Bren Hall, University of California", city = "Santa Barbara", region = "CA", postcode = "93106", country = "United States", country_code = "US"}
+address = {street = "311 Oak Street", city = "Oakland", region = "CA", postcode = "94607", country = "United States", country_code = "US"}
 
 # Geographic coordinates
 # To get your coordinates, right-click on Google Maps and choose "What's here?". The coords will show up at the bottom.
-coordinates = {latitude = "34.413337", longitude = "-119.842226"}
+coordinates = {latitude = "37.79436115564096", longitude = "-122.26811064603008"}
 
 # Directions for visitors to locate you.
 directions = ""

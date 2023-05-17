@@ -17,17 +17,69 @@ date_format = "Jan 2, 2006"
 #   Required fields are `title`, `company`, and `date_start`.
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
+
+
+[[experience]]
+  title = "LCA Engineer"
+  company = "Bolt Threads"
+  company_url = "https://boltthreads.com/"
+  location = "Berkeley, CA"
+  date_start = "2021-11-01"
+  date_end = ""
+  description = """
+  * Developed Life Cycle Assessment (LCA) model for innovative bio-technology products with application including textile material, cosmetic ingredient, etc.
+  * Spearheaded impact reduction efforts through collaboration with research, process development, engineering, product development, and quality teams
+  * Led carbon management program including analyzing, communicating, and disclosing corporate carbon footprint (scope 1, 2 and 3)
+  * Led sustainability certification program including renewable energy credit, carbon offset, vegan certificate, etc.
+  * Collaborated with marketing and sales teams on effective impact communication with media and clients
+  * Coordinated relationship with external sustainability partners including industry groups, NGOs
+  * Hosted educational sustainability workshops for employees
+  """
+
+[[experience]]
+  title = "Environmental Analyst"
+  company = "VitalMetrics Group"
+  company_url = "https://vitalmetrics.com/"
+  location = "Santa Barbara, CA"
+  date_start = "2020-12-01"
+  date_end = "2021-11-01"
+  description = """
+  * Performed LCA in the context of wide-ranging projects and performing detailed calculations to find material flows, greenhouse gas emissions, ecological footprints, and other environmental, economic, and social metrics
+  * Analyzed the feasibility and decarbonization potential of state-of-art and emerging technologies in 50+ industries for sustainable supply chain management, including the manufacturing, agriculture, utility, transportation etc. sectors
+  * Developed a greenhouse gas (GHG) abatement model based on an existing Economic Input-Output Life Cycle Assessment (EIO-LCA) model provided by US EPA (USEEIO). This model would allow corporates, organizations, and states understand the carbon footprint reduction potential by adopting various decarbonization technologies in their supply chains
+  * Performed Carbon Accounting for various organizations (scope 1, 2 and 3)
+  * Improved environmental database management, including data collection, database maintenance, and environmental data modeling
+  """
+
 [[experience]]
   title = "Research Assistant"
   company = "Bren School of Environmental Science and Management"
   company_url = "http://bren.ucsb.edu"
-  location = "California"
-  date_start = "2020-10-01"
-  date_end = ""
+  location = "Santa Barbara, CA"
+  date_start = "2019-02-01"
+  date_end = "2021-11-01"
   description = """
-  * Employed life cycle assessment (LCA) method to analyze the environmental impacts for common types of cookstove used in the developing world (three stone wood stove, charcoal stove, liquified petroleum gas stove, wood-pellet gasifier stove)  
-  * Analyzed the depletion pattern of Rwandan forestry resources due to local cooking fuel consumption  
-  * Business initiative to distribute high efficiency cookstoves to underprivileged communities in Rwanda  
+  * Initiative to distribute high efficiency cookstoves to underprivileged communities in Rwanda and analyze their environmental and health benefits; the project was awarded a pilot grant for the UC-initiated offset projects
+  * Employed LCA to analyze the environmental impacts for common types of cookstoves used in Rwanda
+  * Presented in Africa's Readiness for Climate Change (ARCC) Forum hosted by University of California, Los Angeles in April, 2021
+  * Collaborated with Santa Barbara NGO World Dance for Humanity (WD4H) to establish a donation channel for continuous cookstove supply
+  * Project moving into the pilot phase with 100+ stoves distributed
+  * Evaluated the opportunities in registering the projects as a carbon offset provider under the Clean Development Mechanism (CDM) and the Gold Standard (GS) via their corresponding cookstove programs
+  * Established the data collection and management system for continuous monitoring of the project impact 
+  """
+  
+[[experience]]
+  title = "Data Manager"
+  company = "Bren School of Environmental Science and Management / Apeel Sciences"
+  company_url = "https://www.apeel.com"
+  location = "Santa Barbara, CA"
+  date_start = "2019-01-01"
+  date_end = "2020-05-01"
+  description = """
+  * Graduate group project with Apeel Sciences as client;
+  * Employed LCA to evaluate the environmental impacts of sourcing various agricultural wastes and byproducts as feedstock for production of a bio-based food preservative, wiht focus on cocoa husk, grape pomace, olive pomace, and coffee cherry
+  * Developed methods to determine the environmental impacts of agricultural wastes/by-products – the economic allocation method and the substitution method
+  * The final deliverable report can be found in the "Projects" section
   """
 
   
