@@ -20,8 +20,9 @@ education:
 email: "tedjiang94@outlook.com"
 interests:
 - Sustainable Production
-- Economy Decarbonization
+- Decarbonization
 - Environmental Metrics
+- Industrial Ecology
 - Corporate Sustainability / ESG
 name: Yingfei "Ted" Jiang
 organizations:
@@ -35,6 +36,9 @@ social:
 - icon: github
   icon_pack: fab
   link: https://github.com/tedjiang
+- icon: linkedin
+  icon_pack: fab
+  link: https://www.linkedin.com/in/ted-jiang-a2383918b/
 superuser: true
 user_groups:
 - Researchers
