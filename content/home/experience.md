@@ -27,10 +27,13 @@ date_format = "Jan 2, 2006"
   date_start = "2021-11-01"
   date_end = ""
   description = """
-  * Developed Life Cycle Assessment (LCA) model for innovative bio-technology products with application including textile material, cosmetic ingredient, etc.
-  * Spearheaded impact reduction efforts through collaboration with research, process development, engineering, product development, and quality teams
+  * Established the initial environmental sustainability program for a bio-tech start-up company, including carbon management, product Life Cycle Assessment (LCA), impact reduction (with a focus on carbon and water consumption) strategy development
   * Led carbon management program including analyzing, communicating, and disclosing corporate carbon footprint (scope 1, 2 and 3)
-  * Led sustainability certification program including renewable energy credit, carbon offset, vegan certificate, etc.
+  * Led renewable energy procurement program for the company’s North American and Dutch operations
+  * Developed iterations of LCA models for innovative bio-tech products with applications including textile material, cosmetic ingredient, etc.
+  * Led internal impact reduction efforts through collaboration with research, process development, engineering, product development, and quality teams
+  * Led supply chain impact reduction efforts through collaboration with major suppliers
+  * Led sustainability certification program including carbon offset, vegan certificate, chemical management certificate, etc.
   * Collaborated with marketing and sales teams on effective impact communication with media and clients
   * Coordinated relationship with external sustainability partners including industry groups, NGOs
   * Hosted educational sustainability workshops for employees
@@ -44,11 +47,12 @@ date_format = "Jan 2, 2006"
   date_start = "2020-12-01"
   date_end = "2021-11-01"
   description = """
-  * Performed LCA in the context of wide-ranging projects and performing detailed calculations to find material flows, greenhouse gas emissions, ecological footprints, and other environmental, economic, and social metrics
-  * Analyzed the feasibility and decarbonization potential of state-of-art and emerging technologies in 50+ industries for sustainable supply chain management, including the manufacturing, agriculture, utility, transportation etc. sectors
-  * Developed a greenhouse gas (GHG) abatement model based on an existing Economic Input-Output Life Cycle Assessment (EIO-LCA) model provided by US EPA (USEEIO). This model would allow corporates, organizations, and states understand the carbon footprint reduction potential by adopting various decarbonization technologies in their supply chains
+  * Performed LCA in the context of wide-ranging projects and performing detailed calculations to find material flows, greenhouse gas (GHG) emissions, ecological footprints, and other environmental, economic, and social metrics
+  * Analyzed the feasibility and decarbonization potential of state-of-art and emerging technologies in various industries for sustainable supply chain management
+  * Developed a GHG abatement model based on an existing Economic Input-Output Life Cycle Assessment (EIO-LCA) model, which would provide scientific estimates on how supply technology intervention would affect the company’s Scope 3 carbon footprint; the model would help the client understand the carbon hotspots in the supply chain, and develop a science-based supply chain decarbonization strategy 
   * Performed Carbon Accounting for various organizations (scope 1, 2 and 3)
   * Improved environmental database management, including data collection, database maintenance, and environmental data modeling
+  * As a team member, reviewed and published a review article on LCA for plastics through National Institute of Standards and Technology (NIST)
   """
 
 [[experience]]
@@ -60,7 +64,7 @@ date_format = "Jan 2, 2006"
   date_end = "2021-11-01"
   description = """
   * Initiative to distribute high efficiency cookstoves to underprivileged communities in Rwanda and analyze their environmental and health benefits; the project was awarded a pilot grant for the UC-initiated offset projects
-  * Employed LCA to analyze the environmental impacts for common types of cookstoves used in Rwanda
+  * Employed LCA to analyze the environmental impacts for common cooking methods used in Rwanda
   * Presented in Africa's Readiness for Climate Change (ARCC) Forum hosted by University of California, Los Angeles in April, 2021
   * Collaborated with Santa Barbara NGO World Dance for Humanity (WD4H) to establish a donation channel for continuous cookstove supply
   * Project moving into the pilot phase with 100+ stoves distributed
@@ -76,9 +80,10 @@ date_format = "Jan 2, 2006"
   date_start = "2019-01-01"
   date_end = "2020-05-01"
   description = """
-  * Graduate group project with Apeel Sciences as client;
-  * Employed LCA to evaluate the environmental impacts of sourcing various agricultural wastes and byproducts as feedstock for production of a bio-based food preservative, wiht focus on cocoa husk, grape pomace, olive pomace, and coffee cherry
-  * Developed methods to determine the environmental impacts of agricultural wastes/by-products – the economic allocation method and the substitution method
+  * Group project on analyzing the environmental impacts of sourcing agricultural wastes and by-products as production feedstocks for a novel bio-based chemical production, with Apeel Sciences as client
+  * Employed LCA to evaluate the environmental impacts of sourcing various agricultural wastes and byproducts as feedstock for production of a bio-based food preservative, with focus on cocoa husk, grape pomace, olive pomace, and coffee cherry
+  * Developed an easy-to-implement method to determine the environmental impacts of sourcing wastes/by-products – the economic allocation method and the substitution method
+  * Discussed the relationship between the substitution method and the system expansion method in LCA modeling
   * The final deliverable report can be found in the "Projects" section
   """
 
