@@ -29,8 +29,6 @@ publication_short: NIST
 publication_types:
 - 4
 publishDate: "2022-03-01T00:00:00Z"
-summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus
-  ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum.
 tags:
 - Plastic
 - Life Cycle Assessment
