@@ -18,6 +18,33 @@ date_format = "Jan 2, 2006"
 #   Leave `date_end` empty if it's your current employer.
 #   Begin/end multi-line descriptions with 3 quotes `"""`.
 
+[[experience]]
+  title = "Sustainability Manager"
+  company = "Hyve Solutions"
+  company_url = "https://hyvesolutions.com"
+  location = "Fremont, CA"
+  date_start = "2024-8-01"
+  date_end = ""
+  description = """
+  * Manager corporate sustainability program, which covers six campuses globally, with more than 3000 employees. 
+  * Conduct annual corporate carbon footprint; Develop product Life Cycle Assessment model
+  * Ensure all facilities are in compliance with local, state, and international laws
+  * Respond to clients'sustainability requests
+  """
+
+[[experience]]
+  title = "LCA Consultant"
+  company = "Freelance, serving Fashion for Good"
+  company_url = "https://www.fashionforgood.com"
+  location = "Remote"
+  date_start = "2023-12-01"
+  date_end = ""
+  description = """
+  * Conduct Life Cycle Assessment for innovative textile processes and materials with Fashion for Goods' Impact Assessment team. 
+  * Help 20+ textile innovators understand their potential environmental impact.
+  * Review and critique environmental impact assessment reports, studies, and presentations
+  * Host workshop on environmental metrics, sustainable programs (CDP, SBTi, etc.), and carbon market
+  """
 
 [[experience]]
   title = "LCA Engineer"
