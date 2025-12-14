@@ -22,13 +22,13 @@ subtitle = ""
   description = "From assurance-ready Carbon Footprint to SBTi-aligned decarbonization"
 
 [[feature]]
-  icon = "chart-column"
+  icon = "chart-bar"
   icon_pack = "fas"
   name = "Product Impact Assessment"
   description = "Harness Life Cycle Assessment to make credible eco-claims"
   
 [[feature]]
-  icon = "site-map"
+  icon = "diagram-project"
   icon_pack = "fas"
   name = "Environmental Management System"
   description = "ISO compliant, risk based, and continual improvements"  
@@ -40,7 +40,7 @@ subtitle = ""
   description = "Stay ahead of shifting clients expectations and complex legal landscape"
 
 [[feature]]
-  icon = "arrows-spin"
+  icon = "recycle"
   icon_pack = "fas"
   name = "Circularity Management System"
   description = "Reduce waste and boost efficiency"  
