@@ -28,9 +28,12 @@ interests:
 - Audit Program Management
 name: Yingfei "Ted" Jiang
 organizations:
-#- name: Hyve Solutions
-#  url: "https://hyvesolutions.com/hyve-solutions/"
-role: Sustainability Manager
+- name: Hyve Solutions
+  url: "https://hyvesolutions.com/hyve-solutions/"
+  role: Sustainability Manager
+- name: New Leaf Sustainability - Freelance
+  url: "https://new-leaf-sustainability.com/"
+  role: Environmental Engineer
 social:
 - icon: envelope
   icon_pack: fas
@@ -47,4 +50,4 @@ user_groups:
 - Visitors
 ---
 
-Experienced Environmental Engineer dedicated to help organizations achieve responsible growth and sustainability excellence. I integrate data-driven decision-making with risk-based management systems to deliver long-term success and measurable impacts. I have 10 years of experience providing environmental sustainability solutions in various industries including innovative food and fiber, bio-based materials, textile, electronics and ICT, and AI datacenter hardware manufacturing. I specialize in environmental impact assessment (Carbon Footprinting, Life Cycle Assessment), environmental compliance, ISO 14001 Environmental Management System, decarbonization strategy, and audit program management. When not working, I like to read-- mainly non-fictions. We have a Border Collie called Molly, she is adorable and needs lots of attention, so I try to do that too. 
+Experienced Environmental Engineer dedicated to help organizations achieve responsible growth and sustainability excellence. I integrate data-driven decision-making with risk-based management systems to deliver long-term success and measurable impacts. I have 10 years of experience providing environmental sustainability solutions in various industries including innovative food and fiber, bio-based materials, textile, electronics and ICT, and AI datacenter hardware manufacturing. I specialize in environmental impact assessment, environmental compliance, ISO 14001 Environmental Management System, decarbonization strategy, and audit program management. When not working, I like to read-- mainly non-fictions. We have a Border Collie called Molly, she is adorable and needs lots of attention, so I try to do that too. 
