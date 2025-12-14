@@ -96,34 +96,5 @@ date_format = "Jan 2, 2006"
   * Evaluated the opportunities in registering the projects as a carbon offset provider under the Clean Development Mechanism (CDM) and the Gold Standard (GS) via their corresponding cookstove programs
   * Established the data collection and management system for continuous monitoring of the project impact 
   """
-  
-[[experience]]
-  title = "Data Manager"
-  company = "Bren School of Environmental Science and Management / Apeel Sciences"
-  company_url = "https://www.apeel.com"
-  location = "Santa Barbara, CA"
-  date_start = "2019-01-01"
-  date_end = "2020-05-01"
-  description = """
-  * Group project on analyzing the environmental impacts of sourcing agricultural wastes and by-products as production feedstocks for a novel bio-based chemical production, with Apeel Sciences as client
-  * Employed LCA to evaluate the environmental impacts of sourcing various agricultural wastes and byproducts as feedstock for production of a bio-based food preservative, with focus on cocoa husk, grape pomace, olive pomace, and coffee cherry
-  * Developed an easy-to-implement method to determine the environmental impacts of sourcing wastes/by-products – the economic allocation method and the substitution method
-  * Discussed the relationship between the substitution method and the system expansion method in LCA modeling
-  * The final deliverable report can be found in the "Projects" section
-  """
-
-  
-[[experience]]
-  title = "Research Assistant"
-  company = "Ningbo Institute of Material Technology & Engineering, China Academy of Science (CAS)"
-  company_url = ""
-  location = "Ningbo, China"
-  date_start = "2014-06-01"
-  date_end = "2014-09-01"
-  description = """
-  * Employed magnetron sputtering systems to make magnetic thin films  
-  * Prepared Neodymium-Iron-Boron and Samarium-Cobalt target material; dealt with cracking issue  
-  * Used Thin Film Deposition Magnetron Sputtering Systems to sputter thin film
-  """
 
 +++
