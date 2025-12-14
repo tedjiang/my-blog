@@ -64,7 +64,7 @@ subtitle = ""
   description = "Navigate through the complexity of renewable energy market and find the best option for you"
   
 [[feature]]
-  icon = "rectangle-list"
+  icon = "list"
   icon_pack = "fas"
   name = "Sustainability Disclosure Frameworks"
   description = "CDP, GRI, TCFD, EcoVadis, etc."
