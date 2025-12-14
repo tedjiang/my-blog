@@ -28,7 +28,7 @@ subtitle = ""
   description = "Harness Life Cycle Assessment to make credible eco-claims"
   
 [[feature]]
-  icon = "diagram-project"
+  icon = "folder-tree"
   icon_pack = "fas"
   name = "Environmental Management System"
   description = "ISO compliant, risk based, and continual improvements"  
