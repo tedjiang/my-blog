@@ -38,7 +38,7 @@ date_format = "Jan 2, 2006"
   company_url = "https://www.fashionforgood.com"
   location = "Remote"
   date_start = "2023-12-01"
-  date_end = "2025-12-01"
+  date_end = "2024-7-01"
   description = """
   * Conduct Life Cycle Assessment for innovative textile processes and materials with Fashion for Goods' Impact Assessment team. 
   * Help 20+ textile innovators understand their potential environmental impact.
