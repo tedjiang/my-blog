@@ -5,7 +5,7 @@ headless = true  # This file represents a page section.
 active = true  # Activate this widget? true/false
 weight = 30  # Order that this section will appear.
 
-title = "Specializations"
+title = "Specializations\n\n"
 subtitle = ""
 
 # Showcase personal skills or business features.
@@ -50,4 +50,22 @@ subtitle = ""
   icon_pack = "fas"
   name = "Green Chemistry Stewardship"
   description = "Toxicity and hazard assessment, green chemistry alternative assessment, industrial hygiene"
+  
+[[feature]]
+  icon = "leaf"
+  icon_pack = "fas"
+  name = "Sustainable Product Design"
+  description = "Impact assessment for early stage innovations and design for sustainability"
+  
+[[feature]]
+  icon = "lighting"
+  icon_pack = "fas"
+  name = "Renewable Energy Portfolio Management"
+  description = "Navigate through the complexity of renewable energy market and find the best option for you"
+  
+[[feature]]
+  icon = "table-list"
+  icon_pack = "fas"
+  name = "Sustainability Disclosure Frameworks"
+  description = "CDP, GRI, TCFD, EcoVadis, etc."
 +++
