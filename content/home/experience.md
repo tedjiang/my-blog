@@ -77,12 +77,12 @@ date_format = "Jan 2, 2006"
   date_start = "2020-12-01"
   date_end = "2021-11-01"
   description = """
-  * Performed LCA in the context of wide-ranging projects and performing detailed calculations to find material flows, greenhouse gas (GHG) emissions, ecological footprints, and other environmental, economic, and social metrics
+  * Performed LCA on projects from various industries, finding material flows, greenhouse gas (GHG) emissions, ecological footprints, and other environmental, economic, and social metrics for the product
   * Analyzed the feasibility and decarbonization potential of state-of-art and emerging technologies in various industries for sustainable supply chain management
-  * Developed a GHG abatement model based on an existing Economic Input-Output Life Cycle Assessment (EIO-LCA) model, which would provide scientific estimates on how supply technology intervention would affect the company’s Scope 3 carbon footprint; the model would help the client understand the carbon hotspots in the supply chain, and develop a science-based supply chain decarbonization strategy 
+  * Developed decarbonization tool based on Economic Input-Output Life Cycle Assessment (EIO-LCA) model, providing scientific estimates on the decarbonization of supply chain technology intervention; the model would help the client understand the carbon hotspots in the supply chain, and develop a science-based supply chain decarbonization strategy
+  * The tool was adopted by the client -- a Fortune 5 company -- as a crucial component of its carbon footprinting analysis
   * Performed Carbon Accounting for various organizations (scope 1, 2 and 3)
   * Improved environmental database management, including data collection, database maintenance, and environmental data modeling
-  * As a team member, reviewed and published a review article on LCA for plastics through National Institute of Standards and Technology (NIST)
   """
 
 [[experience]]
