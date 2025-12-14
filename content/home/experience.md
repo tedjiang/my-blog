@@ -38,7 +38,7 @@ date_format = "Jan 2, 2006"
   company_url = "https://www.fashionforgood.com"
   location = "Remote"
   date_start = "2023-12-01"
-  date_end = ""
+  date_end = "2025-12-01"
   description = """
   * Conduct Life Cycle Assessment for innovative textile processes and materials with Fashion for Goods' Impact Assessment team. 
   * Help 20+ textile innovators understand their potential environmental impact.
@@ -52,7 +52,7 @@ date_format = "Jan 2, 2006"
   company_url = "https://boltthreads.com/"
   location = "Berkeley, CA"
   date_start = "2021-11-01"
-  date_end = ""
+  date_end = "2023-03-15"
   description = """
   * Established the initial environmental sustainability program for a bio-tech start-up company, including carbon management, product Life Cycle Assessment (LCA), impact reduction (with a focus on carbon and water consumption) strategy development
   * Led carbon management program including analyzing, communicating, and disclosing corporate carbon footprint (scope 1, 2 and 3)
