@@ -58,13 +58,13 @@ subtitle = ""
   description = "Impact assessment for early stage innovations and design for sustainability"
   
 [[feature]]
-  icon = "lighting"
+  icon = "lightbulb"
   icon_pack = "fas"
   name = "Renewable Energy Portfolio Management"
   description = "Navigate through the complexity of renewable energy market and find the best option for you"
   
 [[feature]]
-  icon = "table-list"
+  icon = "rectangle-list"
   icon_pack = "fas"
   name = "Sustainability Disclosure Frameworks"
   description = "CDP, GRI, TCFD, EcoVadis, etc."
