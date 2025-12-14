@@ -18,7 +18,7 @@ subtitle = ""
 [[feature]]
   icon = "industry"
   icon_pack = "fas"
-  name = "Enterprise Climate Action"
+  name = "Enterprise Climate Strategy"
   description = "From assurance-ready Carbon Footprint to SBTi-aligned decarbonization"
 
 [[feature]]
@@ -28,7 +28,7 @@ subtitle = ""
   description = "Harness Life Cycle Assessment to make credible eco-claims"
   
 [[feature]]
-  icon = "folder-tree"
+  icon = "tree"
   icon_pack = "fas"
   name = "Environmental Management System"
   description = "ISO compliant, risk based, and continual improvements"  
@@ -36,7 +36,7 @@ subtitle = ""
 [[feature]]
   icon = "certificate"
   icon_pack = "fas"
-  name = "Environmental Compliance"
+  name = "Environmental Compliance Management"
   description = "Stay ahead of shifting clients expectations and complex legal landscape"
 
 [[feature]]
@@ -48,6 +48,6 @@ subtitle = ""
 [[feature]]
   icon = "list"
   icon_pack = "fas"
-  name = "Industry Knowledge"
+  name = "Extensive Industry Knowledge"
   description = "Energy, ICT, AI and Data Center Hardware, Fashion & Apparel, Bio-Technology, Manufacturing, Indoor Agriculture"
 +++
