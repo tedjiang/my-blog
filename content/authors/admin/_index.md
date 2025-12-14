@@ -18,17 +18,19 @@ education:
     institution: Nankai University
     year: 2012-2016
 email: "tedjiang94@outlook.com"
-Specialized in:
-- Enterprise Carbon Footprinting - GHG Protocol and/or ISO 14064 compliant 
-- Decarbonization
-- Environmental Metrics
-- Industrial Ecology
-- Corporate Sustainability / ESG
+specialization:
+- Enterprise Carbon Footprinting - GHG Protocol and/or ISO 14064 Compliant 
+- Net-Zero Decarbonization Strategy - SBTi-Aligned
+- Environmental Management System - ISO 14001 Compliant
+- Material Flow Analysis and Industrial Ecology
+- Corporate Sustainability
+- Supply Chain Due Diligence
+- Audit Program Management
 name: Yingfei "Ted" Jiang
 organizations:
-#- name: Bolt Threads
-#  url: "https://boltthreads.com"
-role: Sustainability Specialist
+#- name: Hyve Solutions
+#  url: "https://hyvesolutions.com/hyve-solutions/"
+role: Sustainability Manager
 social:
 - icon: envelope
   icon_pack: fas
