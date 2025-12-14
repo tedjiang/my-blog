@@ -46,8 +46,8 @@ subtitle = ""
   description = "Reduce waste and boost efficiency"  
   
 [[feature]]
-  icon = "list"
+  icon = "flask"
   icon_pack = "fas"
-  name = "Extensive Industry Knowledge"
-  description = "Energy, ICT, AI and Data Center Hardware, Fashion & Apparel, Bio-Technology, Manufacturing, Indoor Agriculture"
+  name = "Green Chemistry Stewardship"
+  description = "Toxicity and hazard assessment, green chemistry alternative assessment, industrial hygiene"
 +++

@@ -8,7 +8,7 @@ header:
 preview_only: true
 ---
 
-![**Figure 1. Extending shelf-life of fresh produce can reduce waste.** (Source: image from online)](/img/headers/fuji-apple.jpeg)
+[**Figure 1. Extending shelf-life of fresh produce can reduce waste.** (Source: image from online)](/img/headers/fuji-apple.jpeg)
 
 This project is a group project which leads to the acquisition of the degree of Master of Environmental Science and Management for the Bren School of Environmental Science & Management, University of California, Santa Barbara.  
 
