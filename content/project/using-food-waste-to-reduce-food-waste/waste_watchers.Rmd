@@ -5,7 +5,10 @@ date: "2/7/2021"
 output: html_document
 header:
   image: "headers/fuji-apple.jpeg"
+preview_only: true
 ---
+
+(/img/headers/fuji-apple.jpeg)
 
 This project is a group project which leads to the acquisition of the degree of Master of Environmental Science and Management for the Bren School of Environmental Science & Management, University of California, Santa Barbara.  
 
