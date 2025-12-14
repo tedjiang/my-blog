@@ -18,7 +18,7 @@ education:
     institution: Nankai University
     year: 2012-2016
 email: "tedjiang94@outlook.com"
-interest:
+interests:
 - Enterprise Carbon Footprinting - GHG Protocol and/or ISO 14064 Compliant 
 - Net-Zero Decarbonization Strategy - SBTi-Aligned
 - Environmental Management System - ISO 14001 Compliant
