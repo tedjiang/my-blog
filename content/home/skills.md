@@ -18,7 +18,7 @@ subtitle = ""
 [[feature]]
   icon = "industry"
   icon_pack = "fas"
-  name = "Enterprise Climate Strategy"
+  name = "Enterprise Net-Zero Climate Strategy"
   description = "From assurance-ready Carbon Footprint to SBTi-aligned decarbonization"
 
 [[feature]]
