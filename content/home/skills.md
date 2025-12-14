@@ -18,36 +18,36 @@ subtitle = ""
 [[feature]]
   icon = "industry"
   icon_pack = "fas"
-  name = "Carbon Accounting"
-  description = "Scope 1, 2, and 3"
+  name = "Enterprise Climate Action"
+  description = "From assurance-ready Carbon Footprint to SBTi-aligned decarbonization"
 
 [[feature]]
-  icon = "tree"
+  icon = "chart-column"
   icon_pack = "fas"
-  name = "Life Cycle Assessment"
-  description = "Process-Based, EEIO"
+  name = "Product Impact Assessment"
+  description = "Harness Life Cycle Assessment to make credible eco-claims"
   
 [[feature]]
-  icon = "leaf"
+  icon = "site-map"
   icon_pack = "fas"
-  name = "Corporate ESG Initiative"
-  description = "SBTi, CDP, TCFD, TNFD, AFi, etc."  
+  name = "Environmental Management System"
+  description = "ISO compliant, risk based, and continual improvements"  
   
 [[feature]]
-  icon = "chart-line"
+  icon = "certificate"
   icon_pack = "fas"
-  name = "Data Analysis"
-  description = "Econometrics, Time Series and Geographic Analyses, Principal Component Analysis"
+  name = "Environmental Compliance"
+  description = "Stay ahead of shifting clients expectations and complex legal landscape"
 
 [[feature]]
-  icon = "code"
+  icon = "arrows-spin"
   icon_pack = "fas"
-  name = "Programming Language and Software"
-  description = "R, Python, Java, SimaPro, Gabi, Tableau, MS Excel"  
+  name = "Circularity Management System"
+  description = "Reduce waste and boost efficiency"  
   
 [[feature]]
   icon = "list"
   icon_pack = "fas"
   name = "Industry Knowledge"
-  description = "Energy, Fashion & Apparel, Bio-Technology, Agriculture"
+  description = "Energy, ICT, AI and Data Center Hardware, Fashion & Apparel, Bio-Technology, Manufacturing, Indoor Agriculture"
 +++
