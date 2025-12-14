@@ -8,18 +8,18 @@ education:
   - course: MSc in Environmental Science and Management
     institution: University of California, Santa Barbara
     year: 2018-2020
-  - course: MSc in Materials Science and Engineering
+  - course: MSc in Engineering, Materials Science
     institution: University of Pennsylvania
     year: 2016-2018
-  - course: BSc in Physics for Materials
+  - course: BSc in Physics
     institution: Nankai University
     year: 2012-2016
   - course: BA in Chinese Language and Literature
     institution: Nankai University
     year: 2012-2016
 email: "tedjiang94@outlook.com"
-interests:
-- Sustainable Production
+Specialized in:
+- Enterprise Carbon Footprinting - GHG Protocol and/or ISO 14064 compliant 
 - Decarbonization
 - Environmental Metrics
 - Industrial Ecology
@@ -45,4 +45,4 @@ user_groups:
 - Visitors
 ---
 
-I am a sustainability specialist with passion in helping companies and organizations achieve their sustainability goals. I am professionally trained in environmental metrics like Carbon Accounting and Life Cycle Assessment, and utilize data analysis and scientific modeling in my work. I have experience with corporate sustainability initiatives such as SBTi, B-corp certificate, TCFD, CDP, etc. I am a strong communicator, a great team worker, and can effectively deliver complex information in an approachable way. During my free time, I like to spend time with my partner, our three cats and two frogs. I also enjoy music, movie, and video games.
+Experienced Environmental Engineer dedicated to help organizations achieve responsible growth and sustainability excellence. I integrate data-driven decision-making with risk-based management systems to deliver long-term success and measurable impacts. I have 10 years of experience providing environmental sustainability solutions in various industries including innovative food and fiber, bio-based materials, textile, electronics and ICT, and AI datacenter hardware manufacturing. I specialize in environmental impact assessment (Carbon Footprinting, Life Cycle Assessment), environmental compliance, ISO 14001 Environmental Management System, decarbonization strategy, and audit program management. When not working, I like to read-- mainly non-fictions. We have a Border Collie called Molly, she is adorable and needs lots of attention, so I try to do that too. 
