@@ -55,7 +55,7 @@ subtitle = ""
   icon = "leaf"
   icon_pack = "fas"
   name = "Design for Product Sustainability"
-  description = "Impact assessment for early stage innovations and design for sustainability from product ideation"
+  description = "Impact assessment for innovations and design for sustainability from product ideation"
   
 [[feature]]
   icon = "lightbulb"
