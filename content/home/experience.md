@@ -61,8 +61,6 @@ date_format = "Jan 2, 2006"
   * Led internal impact reduction efforts through collaboration with research, process development, engineering, product development, and quality teams
   * Led supply chain impact reduction efforts through collaboration with major suppliers
   * Led sustainability certification program including carbon offset, vegan certificate, chemical management certificate, etc.
-  * Collaborated with marketing and sales teams on effective impact communication with media and clients
-  * Coordinated relationship with external sustainability partners including industry groups, NGOs
   * Hosted educational sustainability workshops for employees
   """
 
