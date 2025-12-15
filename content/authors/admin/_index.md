@@ -28,12 +28,12 @@ interests:
 - Audit Program Management
 name: Yingfei "Ted" Jiang
 organizations:
-- name: Hyve Solutions
+- name: Environmental Engineer
   url: "https://hyvesolutions.com/hyve-solutions/"
-  role: Sustainability Manager
-- name: New Leaf Sustainability - Freelance
+  role: 
+- name: Writing Samples
   url: "https://new-leaf-sustainability.com/"
-  role: Environmental Engineer
+  role: 
 social:
 - icon: envelope
   icon_pack: fas
