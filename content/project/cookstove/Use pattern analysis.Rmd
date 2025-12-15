@@ -1,0 +1,72 @@
+---
+title: "Cookstove final data"
+author: "Yingfei Jiang"
+date: '2022-10-11'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(paletteer)
+library(janitor)
+library(readxl)
+library(lubridate)
+```
+
+```{r}
+raw_df <- read_xlsx("Master data.xlsx", sheet = "Tidy Format") %>% 
+  clean_names()
+
+tidy_df <- pivot_longer(raw_df, cols = 7:13, names_to = "Fuel Consumption", values_to = "Value") %>% 
+  clean_names() %>% 
+  mutate(time = my(paste0(month, ", ", year))) %>% 
+  select(-month, -year)
+```
+
+```{r}
+#Calculate household average across 100 sample households
+
+hh_average_byyr_df <- tidy_df %>% 
+  group_by(fuel_consumption, time, group) %>% 
+  summarise(mean = mean(value),
+            sd = sd(value))
+
+
+#Plotting mean+sd
+
+hh_average_byyr_mean <- hh_average_byyr_df %>% 
+  filter(fuel_consumption == "total_mj")
+
+p1 <- ggplot(hh_average_byyr_mean, aes(x = time, y = mean, fill = group))+
+  geom_bar(stat="identity", color = "white")+
+  geom_errorbar(aes(ymin=mean-sd, ymax=mean+sd), width = 6)+
+  labs(x="Month", y="Monthly Household Cooking Heat Demand (MJ/Household)", fill="Group")+
+  expand_limits(y = 0)+
+  theme_minimal()+
+  scale_fill_paletteer_d("ggsci::lanonc_lancet")
+
+p1
+
+p2 <- ggplot(filter(tidy_df, fuel_consumption == "total_mj"), aes(x = time, y = value, group = time, fill = group))+
+  geom_boxplot()
+
+p2
+```
+
+```{r}
+#Plotting composition
+
+hh_average_byyr_comp <- hh_average_byyr_df %>% 
+  filter(fuel_consumption %in% c("wood_mj", "charcoal_mj", "pellet_mj"))
+
+p3 <- ggplot(hh_average_byyr_comp, aes(x = time, y = mean, fill = fuel_consumption))+
+  geom_bar(stat="identity", color = "black")
+
+p3
+
+```
+

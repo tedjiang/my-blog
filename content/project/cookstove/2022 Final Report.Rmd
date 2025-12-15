@@ -1,0 +1,254 @@
+---
+title: "Consumption Analysis"
+author: "Yingfei Jiang"
+date: '2022-12-06'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(readxl)
+library(janitor)
+library(lubridate)
+library(paletteer)
+library(knitr)
+```
+
+```{r}
+raw_df <- read_xlsx("Master data.xlsx", sheet = "Tidy Format") %>% 
+  clean_names()
+```
+
+```{r}
+#analyzing demand trend -- heating value by household
+#monthly time series- this returns results by month
+heat_demand_byMonth <- raw_df %>% 
+  pivot_longer(7:13, names_to = "item") %>% 
+  filter(item == "total_mj") %>% 
+  group_by(year, month, group) %>% 
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+#aggregated- this further aggregates the results by ungroup the months. Creating a control group with 400 samples (4 month * 100 household) and an experiment group with 1900 samples (19 month * 100 household)
+heat_demand_controlAndExperiment <- raw_df %>% 
+  pivot_longer(7:13, names_to = "item") %>% 
+  filter(item == "total_mj") %>% 
+  group_by(group) %>% 
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value))
+  
+
+demand_bar_p <- ggplot(heat_demand_byMonth, aes(x = time, y = heat_demand_mean, fill = group))+
+  geom_bar(stat = "identity")+
+  geom_errorbar(aes(ymin = heat_demand_mean-heat_demand_sd, ymax = heat_demand_mean+heat_demand_sd), width = 4.5)+
+  scale_fill_manual(values = c("firebrick1", "forestgreen"))+
+  theme_minimal()+
+  labs(x = "\nTime", y = "Total Heat Demand for Cooking per Household (MJ/Household)\n", fill = "Group")
+
+demand_bar_p
+ggsave("monthly total demand.jpeg")
+
+```
+
+This bar plot shows the average total monthly cooking heat demand per household (MJ/Household) combining three fuel types. The error bar indicates the standard deviation. Red indicates the control group (100 households from June 2021 to Sept 2021), green indicates the experiment group (same 100 households from Oct 2021 to Apr 2023). 
+
+Theoretically, the heat demand from control and experiment should roughly stay the same. However in this case, higher heat demand can be observed for the experiment group. Some potential reasons are
+
+1. Households might use more wood pellet than necessary, considering it is a newly introduced technology;
+2. Data quality, or to be more specific, the heat content of the fuels and the thermal efficiency of stove types. These can be find in the "parameters" tab in "Master data.xlsx"
+
+This is likely not due to seasonality. If we compare June to Sept 2021 and June to Sept 2022, there is still a significant increase although it is the same time period.
+
+```{r}
+#analyzing demand trend -- heating value by person
+#monthly time series- this returns results by month
+heat_demand_byMonth_byP <- raw_df %>% 
+  pivot_longer(7:13, names_to = "item") %>% 
+  filter(item == "total_mj") %>% 
+  group_by(year, month, group) %>% 
+  mutate(value = value/number_of_people) %>% #normalize household consumption to per person consumption
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+#aggregated- this further aggregates the results by ungroup the months. Creating a control group with 400 samples (4 month * 100 household) and an experiment group with 1900 samples (19 month * 100 household)
+heat_demand_controlAndExperiment_byP <- raw_df %>% 
+  pivot_longer(7:13, names_to = "item") %>% 
+  filter(item == "total_mj") %>% 
+  group_by(group) %>%  
+  mutate(value = value/number_of_people) %>% #normalize household consumption to per person consumption
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value))
+  
+
+demand_bar_p_byP <- ggplot(heat_demand_byMonth_byP, aes(x = time, y = heat_demand_mean, fill = group))+
+  geom_bar(stat = "identity")+
+  geom_errorbar(aes(ymin = heat_demand_mean-heat_demand_sd, ymax = heat_demand_mean+heat_demand_sd), width = 4.5)+
+  scale_fill_manual(values = c("firebrick1", "forestgreen"))+
+  theme_minimal()+
+  labs(x = "\nTime", y = "Total Heat Demand for Cooking per Person (MJ/Person)\n", fill = "Group")
+
+demand_bar_p_byP
+ggsave("monthly total demand by person.jpeg")
+
+```
+
+This bar plot shows the average total monthly cooking heat demand per household (MJ/Person) combining three fuel types. The error bar indicates the standard deviation. Red indicates the control group (623 people from 10 households from June 2021 to Sept 2021), green indicates the experiment group (same 623 People from Oct 2021 to Apr 2023). 
+
+The trend is the same as per household analysis.
+
+```{r}
+#analyzing demand trend -- mass by household
+#monthly time series- this returns results by month
+heat_demand_byMonth_byMass <- raw_df %>% 
+  rename(Wood = wood_kg,
+         Charcoal = charcoal_kg,
+         Pellet = pellet_kg) %>% 
+  pivot_longer(7:13, names_to = "item") %>%
+  filter(item %in% c("Wood", "Charcoal", "Pellet")) %>% 
+  group_by(year, month, group, item) %>%
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+
+#aggregated- this further aggregates the results by ungroup the months. Creating a control group with 400 samples (4 month * 100 household) and an experiment group with 1900 samples (19 month * 100 household)
+heat_demand_controlAndExperiment_byFuel <- raw_df %>% 
+  rename(Wood = wood_kg,
+         Charcoal = charcoal_kg,
+         Pellet = pellet_kg) %>% 
+  pivot_longer(7:13, names_to = "item") %>%
+  filter(item %in% c("Wood", "Charcoal", "Pellet")) %>% 
+  group_by(group, item) %>% 
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  rename(Group = group,
+         Fuel = item,
+         'Average Demand per Household (kg)' = heat_demand_mean,
+         'Standard Deviation (kg)' = heat_demand_sd)
+  
+
+demand_line_p <- ggplot(heat_demand_byMonth_byMass, aes(x = time, y = heat_demand_mean, color = item)) +
+  geom_line()+
+  theme_minimal()+
+  scale_color_manual(values = paletteer_d("ggsci::lanonc_lancet"))+
+  labs(x = "\nTime", y = "Fuel Demand for Cooking per Household (kg/Household)\n", color = "Fuel Type")
+  
+
+demand_line_p
+ggsave("monthly total demand_byFuel.jpeg")
+
+kable(heat_demand_controlAndExperiment_byFuel)
+
+```
+The line graph shows the average fuel demand per household (kg) by type between June 2021 and Apr 2023. The table shows the average fuel consumption by group and their standard deviation.
+
+During the control time period (June 2021 to Sept 2021), households use firewood (forage + a small amount of purchase) and purchased charcoal. During the experiment time period (Oct 2021 to Apr 2023), the consumption of firewood stays about the same, yet the consumption of purchased charcoal are substituted by purchased wood pellet.
+
+Economically, it is reasonable for household to adopt this consumption pattern, considering forage firewood is largely free. However, this sabotages the climate benefit potential of wood pellet stoves due to the incomplete switch.
+
+```{r}
+#analyzing demand trend -- mass by person
+#monthly time series- this returns results by month
+heat_demand_byMonth_byMass_ByP <- raw_df %>% 
+  rename(Wood = wood_kg,
+         Charcoal = charcoal_kg,
+         Pellet = pellet_kg) %>% 
+  pivot_longer(7:13, names_to = "item") %>%
+  filter(item %in% c("Wood", "Charcoal", "Pellet")) %>% 
+  group_by(year, month, group, item) %>% 
+  mutate(value = value/number_of_people) %>% #normalize household consumption to per person consumption
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+
+
+heat_demand_controlAndExperiment_byFuel_ByP <- raw_df %>% 
+  rename(Wood = wood_kg,
+         Charcoal = charcoal_kg,
+         Pellet = pellet_kg) %>% 
+  pivot_longer(7:13, names_to = "item") %>%
+  filter(item %in% c("Wood", "Charcoal", "Pellet")) %>% 
+  group_by(group, item) %>%  
+  mutate(value = value/number_of_people) %>% #normalize household consumption to per person consumption
+  summarise(heat_demand_mean = mean(value),
+            heat_demand_sd = sd(value)) %>% 
+  rename(Group = group,
+         Fuel = item,
+         'Average Demand per Person (kg)' = heat_demand_mean,
+         'Standard Deviation (kg)' = heat_demand_sd)
+  
+
+demand_line_p_ByP <- ggplot(heat_demand_byMonth_byMass_ByP, aes(x = time, y = heat_demand_mean, color = item)) +
+  geom_line()+
+  theme_minimal()+
+  scale_color_manual(values = paletteer_d("ggsci::lanonc_lancet"))+
+  labs(x = "\nTime", y = "Fuel Demand for Cooking per Person (kg/Person)\n", color = "Fuel Type")
+  
+
+demand_line_p_ByP
+ggsave("monthly total demand_byFuel_byPerson.jpeg")
+
+kable(heat_demand_controlAndExperiment_byFuel_ByP)
+
+```
+The line graph shows the average fuel demand per person (kg) by type between June 2021 and Apr 2023. The table shows the average fuel consumption by group and their standard deviation.
+
+```{r}
+#analyzing household spending on fuel
+#monthly time series- this returns results by month
+hh_spending_byMonth <- raw_df %>% 
+  mutate(wood_cost_rwf = wood_cost_a_rwf+wood_cost_b_rwf) %>% 
+  select(-wood_kg,-wood_mj,-charcoal_kg,-charcoal_mj,-pellet_kg,-pellet_mj,-total_mj,-wood_cost_a_rwf,-wood_cost_b_rwf) %>% 
+  mutate(cost_total_rwf = wood_cost_rwf + charcoal_cost_rwf + pellet_cost_rwf) %>% 
+  pivot_longer(7:10, names_to = "item")
+
+hh_spending_byMonth_bd <- hh_spending_byMonth %>% 
+  filter(item != "cost_total_rwf") %>% 
+  group_by(year, month, group, item) %>% 
+  summarise(fuel_cost_mean = mean(value),
+            fuel_cost_sd = sd(value)) %>% 
+  mutate(tmp = case_when(
+    item == "charcoal_cost_rwf" ~ "Charcoal",
+    item == "wood_cost_rwf" ~ "Wood",
+    item == "pellet_cost_rwf" ~ "Pellet"
+  )) %>% 
+  select(-item) %>% 
+  rename(item = tmp) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+
+hh_spending_byMonth_tt <- hh_spending_byMonth %>% 
+  filter(item == "cost_total_rwf") %>% 
+  group_by(year, month, group, item) %>% 
+  summarise(fuel_cost_mean = mean(value),
+            fuel_cost_sd = sd(value)) %>% 
+  mutate(time = my(paste0(month, ", ", year)))
+
+#creating area plot for spending
+hh_spending_plot <- ggplot(hh_spending_byMonth_bd, aes(x = time, y = fuel_cost_mean)) +
+  geom_area(aes(fill = item))+
+  theme_minimal()+
+  scale_fill_manual(values = paletteer_d("ggsci::lanonc_lancet"))+
+  labs(x = "\nTime", y = "Fuel Cost for Cooking per Household (RWF/Household)\n", color = "Fuel Type")
+
+hh_spending_plot
+
+#normalizing cost per heating value
+hh_spending_byMonth_tt_tmp <- hh_spending_byMonth_tt %>% 
+  mutate(tmp = case_when(
+    item == "cost_total_rwf" ~ "Total"
+  )) %>% 
+  select(-item) %>% 
+  rename(item = tmp)
+
+hh_spending_byMonth_tt_normalized <- full_join(heat_demand_byMonth, hh_spending_byMonth_tt_tmp) %>% 
+  mutate(normalized_fuel_cost = fuel_cost_mean/heat_demand_mean)
+
+hh_spending_normalized_plot <- ggplot(hh_spending_byMonth_tt_normalized) +
+  geom_line(aes(x = time, y = normalized_fuel_cost))+
+  theme_minimal()+
+  labs(x = "\nTime", y = "Normalized Fuel Cost for Cooking (RWF/MJ)\n")
+
+hh_spending_normalized_plot
+```
+
